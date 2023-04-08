@@ -1,4 +1,4 @@
-package model;
+package com.dogsearch.demo.model;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -20,4 +20,6 @@ public class User {
     private String phoneNumber;
     @ManyToMany
     private List<Role> roles;
+    @OneToMany(mappedBy = "user")
+    private List<Announcement> announcements;
 }

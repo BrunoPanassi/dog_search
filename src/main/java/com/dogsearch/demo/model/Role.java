@@ -1,4 +1,4 @@
-package model;
+package com.dogsearch.demo.model;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;

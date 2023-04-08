@@ -1,13 +1,11 @@
-package model;
+package com.dogsearch.demo.model;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
-@Entity(name = "category") @Getter
-@Setter
-@AllArgsConstructor
+@Entity(name = "category") @Getter @Setter @AllArgsConstructor
 public class Category {
 
     @Id
