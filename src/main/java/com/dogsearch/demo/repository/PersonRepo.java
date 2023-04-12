@@ -16,5 +16,5 @@ public interface PersonRepo extends JpaRepository<Person, Long> {
             WHERE UPPER(person.name) LIKE CONCAT('%', UPPER(:name), '%') 
             AND person.phoneNumber LIKE CONCAT('%', UPPER(:phoneNumber), '%')
             """)
-    String findClientNameByNameAndPhoneNumber(@Param("name") String name, @Param("phoneNumber") String phoneNumber);
+    String findPersonNameByNameAndPhoneNumber(@Param("name") String name, @Param("phoneNumber") String phoneNumber);
 }

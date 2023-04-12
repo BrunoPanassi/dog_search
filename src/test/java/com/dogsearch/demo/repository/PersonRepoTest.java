@@ -2,6 +2,7 @@ package com.dogsearch.demo.repository;
 
 import com.dogsearch.demo.model.Person;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
@@ -20,12 +21,12 @@ class PersonRepoTest {
     }
 
     @Test
-    void itShouldSaveUSer() {
+    void itShouldSaveAndFindPerson() {
         //given
-        String name = "Bruno Henrique";
+        String nameToSave = "Bruno Henrique";
         String phoneNumber = "(18) 99777 6666";
         Person personToSave = new Person(
-                name,
+                nameToSave,
                 "Araçatuba",
                 "Concordia",
                 phoneNumber
@@ -33,9 +34,32 @@ class PersonRepoTest {
         personRepo.save(personToSave);
 
         //when
-        String personFinded = personRepo.findClientNameByNameAndPhoneNumber(name, phoneNumber);
+        String nameToFind = "bruno henrique";
+        String personFinded = personRepo.findPersonNameByNameAndPhoneNumber(nameToFind, phoneNumber);
 
         //then
         assertThat(personFinded).isEqualTo(personToSave.getName());
+    }
+
+    @Disabled
+    @Test
+    void itShouldNotFindPerson() {
+        //given
+        String nameToSave = "Bruno Henrique";
+        String phoneNumber = "(18) 99777 6666";
+        Person personToSave = new Person(
+                nameToSave,
+                "Araçatuba",
+                "Concordia",
+                phoneNumber
+        );
+        personRepo.save(personToSave);
+
+        //when
+        String nameToFind = "bruno henriques";
+        String personFinded = personRepo.findPersonNameByNameAndPhoneNumber(nameToFind, phoneNumber);
+
+        //then
+        assertThat(personFinded).isNull();
     }
 }
