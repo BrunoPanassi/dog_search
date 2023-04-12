@@ -2,10 +2,12 @@ package com.dogsearch.demo.model;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 
-@Entity(name = "role") @Getter
+@Entity @Data
+@Getter
 @Setter
 @AllArgsConstructor
 public class Role {
