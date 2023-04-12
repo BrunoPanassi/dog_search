@@ -1,5 +1,6 @@
 package com.dogsearch.demo.repository;
 
+import com.dogsearch.demo.dto.person.PersonDTO;
 import com.dogsearch.demo.model.Person;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Disabled;
@@ -35,13 +36,12 @@ class PersonRepoTest {
 
         //when
         String nameToFind = "bruno henrique";
-        String personFinded = personRepo.findPersonNameByNameAndPhoneNumber(nameToFind, phoneNumber);
+        PersonDTO personFinded = personRepo.findPersonNameByNameAndPhoneNumber(nameToFind, phoneNumber);
 
         //then
-        assertThat(personFinded).isEqualTo(personToSave.getName());
+        assertThat(personFinded.getName()).isEqualTo(personToSave.getName());
     }
 
-    @Disabled
     @Test
     void itShouldNotFindPerson() {
         //given
@@ -57,7 +57,7 @@ class PersonRepoTest {
 
         //when
         String nameToFind = "bruno henriques";
-        String personFinded = personRepo.findPersonNameByNameAndPhoneNumber(nameToFind, phoneNumber);
+        PersonDTO personFinded = personRepo.findPersonNameByNameAndPhoneNumber(nameToFind, phoneNumber);
 
         //then
         assertThat(personFinded).isNull();
