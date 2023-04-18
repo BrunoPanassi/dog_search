@@ -21,7 +21,7 @@ public class PersonServiceImpl implements PersonService {
 
     @Override
     public Person save(Person person) throws Exception {
-        UtilParam.checkIfAllParamsAreFilled(getPersonParams(person));
+        UtilParam.checkIfAllParamsAreFilled(getParams(person));
         if (!doesPersonHaveAnId(person) && doesPersonAlreadyExistsInDatabase(person))
             UtilException.throwDefault(UtilException.USER_ALREADY_EXISTS);
         return personRepo.save(person);
@@ -46,10 +46,10 @@ public class PersonServiceImpl implements PersonService {
 
     public boolean doesPersonAlreadyExistsInDatabase(Person person) throws Exception {
         PersonDTO personFinded = findIdAndName(person.getName(), person.getPhoneNumber());
-        return personFinded != null && personFinded.getId() != null;
+        return personFinded != null;
     }
 
-    public static String[] getPersonParams(Person person) {
+    public static String[] getParams(Person person) {
         String[] params = {
                 person.getName().toString(),
                 person.getPhoneNumber().toString(),

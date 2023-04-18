@@ -117,10 +117,4 @@ class PersonServiceImplTest {
         //then
         verify(personRepo).deleteById(personId);
     }
-
-    @Disabled
-    @Test
-    void itShouldUpdatePerson() {
-
-    }
 }

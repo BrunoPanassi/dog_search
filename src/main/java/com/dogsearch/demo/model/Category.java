@@ -7,12 +7,18 @@ import lombok.Getter;
 import lombok.Setter;
 
 @Entity @Data
-@Getter @Setter @AllArgsConstructor
+@Getter @Setter
 public class Category {
+
+    public static String objectNamePtBr = "Categoria";
 
     @Id
     @SequenceGenerator(name = "seq_category", sequenceName = "seq_category")
     @GeneratedValue(strategy = GenerationType.IDENTITY, generator = "seq_category")
     private Long id;
     private String name;
+
+    public Category(String name) {
+        this.name = name;
+    }
 }
