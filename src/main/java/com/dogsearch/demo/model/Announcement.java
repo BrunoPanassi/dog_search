@@ -9,8 +9,10 @@ import lombok.Setter;
 import java.util.List;
 
 @Entity @Data
-@Getter @Setter @AllArgsConstructor
+@Getter @Setter
 public class Announcement {
+
+    public static final String objectNamePtBr = "Anúncio";
 
     @Id
     @SequenceGenerator(name = "seq_announcement", sequenceName = "seq_announcement")
@@ -23,4 +25,11 @@ public class Announcement {
     private Category category;
     private String text;
     private List<String> images;
+
+    public Announcement(Person person, String title, Category category, String text) {
+        this.person = person;
+        this.title = title;
+        this.category = category;
+        this.text = text;
+    }
 }

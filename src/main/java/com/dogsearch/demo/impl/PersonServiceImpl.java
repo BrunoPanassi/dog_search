@@ -21,8 +21,8 @@ public class PersonServiceImpl implements PersonService {
 
     @Override
     public Person save(Person person) throws Exception {
-        UtilParam.checkIfAllParamsAreFilled(getParams(person));
-        if (!doesPersonHaveAnId(person) && doesPersonAlreadyExistsInDatabase(person))
+        UtilParam.checkIfAllParamsAreFilled(getParams(person), Person.objectNamePtBr);
+        if (!doesHaveAnId((PersonDTO) person) && doesPersonAlreadyExistsInDatabase(person))
             UtilException.throwDefault(UtilException.USER_ALREADY_EXISTS);
         return personRepo.save(person);
     }
@@ -35,12 +35,18 @@ public class PersonServiceImpl implements PersonService {
     @Override
     public void delete(Person person) throws Exception {
         PersonDTO personFinded = findIdAndName(person.getName(), person.getPhoneNumber());
-        if (personFinded.getId() == null)
-            UtilException.throwDefault(UtilException.USER_DONT_EXISTS);
+        if (!doesHaveAnId(personFinded)) {
+            UtilException.throwDefault(
+                    UtilException.exceptionMessageBuilder(
+                            UtilException.DONT_EXISTS_WITH_PARAM,
+                            List.of(Person.objectNamePtBr)
+                    )
+            );
+        }
         personRepo.deleteById(personFinded.getId());
     }
 
-    public boolean doesPersonHaveAnId(Person person) {
+    public boolean doesHaveAnId(PersonDTO person) {
         return person.getId() != null;
     }
 

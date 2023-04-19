@@ -22,7 +22,7 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public Category save(Category category) throws Exception {
-        UtilParam.checkIfAllParamsAreFilled(getParams(category));
+        UtilParam.checkIfAllParamsAreFilled(getParams(category), Category.objectNamePtBr);
         if (!doesHaveAnId(category) && doesAlreadyExistsInDatabase(category)) {
             List<String> params = new ArrayList<>() {{add(Category.objectNamePtBr);}};
             UtilException.throwDefault(UtilException.exceptionMessageBuilder(UtilException.ALREADY_EXISTS_WITH_PARAM, params));
@@ -38,9 +38,12 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     public void delete(Category category) throws Exception {
         Category categoryFinded = find(category.getName());
-        if (categoryFinded.getId() == null) {
-            List<String> params = new ArrayList<>() {{add(Category.objectNamePtBr);}};
-            UtilException.throwDefault(UtilException.exceptionMessageBuilder(UtilException.DONT_EXISTS_WITH_PARAM, params));
+        if (!doesHaveAnId(categoryFinded)) {
+            UtilException.throwDefault(
+                    UtilException.exceptionMessageBuilder(
+                            UtilException.DONT_EXISTS_WITH_PARAM,
+                            List.of(Category.objectNamePtBr))
+            );
         }
         categoryRepo.deleteById(categoryFinded.getId());
     }

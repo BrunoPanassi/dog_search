@@ -13,6 +13,8 @@ import java.util.List;
 @Getter @Setter
 public class Person {
 
+    public static final String objectNamePtBr = "Pessoa";
+
     @Id
     @SequenceGenerator(name = "seq_person", sequenceName = "seq_person")
     @GeneratedValue(strategy = GenerationType.IDENTITY, generator = "seq_person")
