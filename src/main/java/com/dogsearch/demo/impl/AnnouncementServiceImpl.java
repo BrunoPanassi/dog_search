@@ -1,10 +1,8 @@
 package com.dogsearch.demo.impl;
 
-import com.dogsearch.demo.dto.person.AnnouncementDTO;
-import com.dogsearch.demo.dto.person.PersonDTO;
+import com.dogsearch.demo.dto.announcement.AnnouncementDTO;
+import com.dogsearch.demo.mapper.announcement.AnnouncementConverter;
 import com.dogsearch.demo.model.Announcement;
-import com.dogsearch.demo.model.Category;
-import com.dogsearch.demo.model.Person;
 import com.dogsearch.demo.repository.AnnouncementRepo;
 import com.dogsearch.demo.service.AnnouncementService;
 import com.dogsearch.demo.util.exception.UtilException;
@@ -15,13 +13,14 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service @AllArgsConstructor
-public class AnnoucementServiceImpl implements AnnouncementService {
+public class AnnouncementServiceImpl implements AnnouncementService {
 
     private AnnouncementRepo announcementRepo;
     @Override
     public Announcement save(Announcement announcement) throws Exception {
         UtilParam.checkIfAllParamsAreFilled(getParams(announcement), Announcement.objectNamePtBr);
-        if (!doesHaveAnId((AnnouncementDTO) announcement) && doesPersonAlreadyExistsInDatabase(announcement))
+        AnnouncementDTO dto = AnnouncementConverter.CONVERTER.getDto(announcement);
+        if (!doesHaveAnId(dto) && doesPersonAlreadyExistsInDatabase(announcement))
             UtilException.throwDefault(UtilException.USER_ALREADY_EXISTS);
         return announcementRepo.save(announcement);
     }
@@ -47,7 +46,7 @@ public class AnnoucementServiceImpl implements AnnouncementService {
 
     @Override
     public AnnouncementDTO find(String personName, String title) {
-        return announcementRepo.findByPersonNameAndTitle(personName, title);
+        return announcementRepo.find(personName, title);
     }
 
     @Override

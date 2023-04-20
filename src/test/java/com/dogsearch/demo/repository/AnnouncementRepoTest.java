@@ -1,6 +1,6 @@
 package com.dogsearch.demo.repository;
 
-import com.dogsearch.demo.dto.person.AnnouncementDTO;
+import com.dogsearch.demo.dto.announcement.AnnouncementDTO;
 import com.dogsearch.demo.model.Announcement;
 import com.dogsearch.demo.model.Category;
 import com.dogsearch.demo.model.Person;
@@ -9,7 +9,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static org.assertj.core.api.AssertionsForClassTypes.*;
 @DataJpaTest
 class AnnouncementRepoTest {
@@ -48,7 +47,7 @@ class AnnouncementRepoTest {
         announcementRepo.save(announcementToSave);
 
         //then
-        AnnouncementDTO annoucementFound = announcementRepo.findByPersonNameAndTitle(person.getName(), announcementToSave.getTitle());
+        AnnouncementDTO annoucementFound = announcementRepo.find(person.getName(), announcementToSave.getTitle());
         assertThat(annoucementFound.getPersonName()).isEqualTo(person.getName());
     }
 
@@ -76,7 +75,7 @@ class AnnouncementRepoTest {
         announcementRepo.save(announcementToSave);
 
         //then
-        AnnouncementDTO annoucementFound = announcementRepo.findByPersonNameAndTitle(person.getName(), wrongTitle);
+        AnnouncementDTO annoucementFound = announcementRepo.find(person.getName(), wrongTitle);
         assertThat(annoucementFound).isNull();
     }
 }

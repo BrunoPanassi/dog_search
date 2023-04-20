@@ -1,6 +1,6 @@
 package com.dogsearch.demo.service;
 
-import com.dogsearch.demo.dto.person.AnnouncementDTO;
+import com.dogsearch.demo.dto.announcement.AnnouncementDTO;
 import com.dogsearch.demo.model.Announcement;
 
 public interface AnnouncementService {
