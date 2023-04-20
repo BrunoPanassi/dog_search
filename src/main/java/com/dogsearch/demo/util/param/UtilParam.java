@@ -8,22 +8,25 @@ import java.util.Arrays;
 import java.util.List;
 
 public class UtilParam {
-    public static void checkIfAllParamsAreFilled(String[] params, String fromWhereAreBeingValidated) throws Exception {
-        long paramsCount = params.length;
-        List<String> exceptionMessageParams = new ArrayList<>();
-        exceptionMessageParams.add(fromWhereAreBeingValidated);
+    public static void checkIfAllParamsAreFilled(List<String> params, String fromWhereAreBeingValidated) throws Exception {
+        long paramsCount = params.size();
         boolean allParamsAreFilled = paramsCount == howManyParamsAreFilled(params);
         if (!allParamsAreFilled) {
-            UtilException.throwDefault(
-                    UtilException.exceptionMessageBuilder(
-                            UtilException.PARAMS_DONT_FILLED_TO_THE_CLASS_WITH_PARAM,
-                            exceptionMessageParams
-                    )
-            );
+            UtilParam.throwAllParamsAreNotFilled(fromWhereAreBeingValidated);
         }
     }
 
-    private static long howManyParamsAreFilled(String[] params) {
-        return Arrays.stream(params).filter(p -> p.length() > 0).count();
+    public static void throwAllParamsAreNotFilled(String fromWhere) throws Exception {
+        List<String> exceptionMessageParams = new ArrayList<>(Arrays.asList(fromWhere));
+        UtilException.throwDefault(
+                UtilException.exceptionMessageBuilder(
+                        UtilException.PARAMS_DONT_FILLED_TO_THE_CLASS_WITH_PARAM,
+                        exceptionMessageParams
+                )
+        );
+    }
+
+    private static long howManyParamsAreFilled(List<String> params) {
+        return params.stream().filter(p -> p.length() > 0).count();
     }
 }

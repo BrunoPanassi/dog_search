@@ -57,10 +57,13 @@ public class CategoryServiceImpl implements CategoryService {
         return category.getId() != null;
     }
 
-    public static String[] getParams(Category category) {
-        String[] params = {
-                category.getName()
-        };
+    public static List<String> getParams(Category category) throws Exception {
+        List<String> params = new ArrayList<>();
+        try {
+            params.add(category.getName());
+        } catch (Exception e) {
+            UtilParam.throwAllParamsAreNotFilled(Category.objectNamePtBr);
+        }
         return params;
     }
 }

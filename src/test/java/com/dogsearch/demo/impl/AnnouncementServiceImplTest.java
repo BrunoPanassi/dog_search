@@ -4,12 +4,17 @@ import com.dogsearch.demo.model.Announcement;
 import com.dogsearch.demo.model.Category;
 import com.dogsearch.demo.model.Person;
 import com.dogsearch.demo.repository.AnnouncementRepo;
+import com.dogsearch.demo.util.exception.UtilException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
@@ -60,6 +65,28 @@ class AnnouncementServiceImplTest {
 
     @Test
     void itShouldNotSaveBecauseAllParamsAreNotFilled() {
+        //given
+        Person personToSave = new Person(
+                "Bruno Henrique",
+                "Araçatuba",
+                "Concordia",
+                "(18) 9967 555"
+        );
+        Category caoGuia = new Category("Cão Guia");
+        Announcement announcementToSave = new Announcement(
+                personToSave,
+                "Cão guia",
+                caoGuia,
+                "Cão guia especializado para"
+        );
+        announcementToSave.setCategory(null);
+        List<String> exceptionMessageParams = new ArrayList<>(Arrays.asList(Announcement.objectNamePtBr));
+
+        //when
+        //then
+        assertThatThrownBy(() -> announcementService.save(announcementToSave))
+                .isInstanceOf(Exception.class)
+                .hasMessageContaining(UtilException.exceptionMessageBuilder(UtilException.PARAMS_DONT_FILLED_TO_THE_CLASS_WITH_PARAM, exceptionMessageParams));
     }
 
     @Test

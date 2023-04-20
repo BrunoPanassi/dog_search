@@ -55,13 +55,18 @@ public class PersonServiceImpl implements PersonService {
         return personFinded != null;
     }
 
-    public static String[] getParams(Person person) {
-        String[] params = {
-                person.getName().toString(),
-                person.getPhoneNumber().toString(),
-                person.getCity().toString(),
-                person.getNeighbourhood().toString()
-        };
+    public static List<String> getParams(Person person) throws Exception {
+        List<String> params = new ArrayList<>();
+        try {
+            params.addAll(List.of(
+                    person.getName().toString(),
+                    person.getPhoneNumber().toString(),
+                    person.getCity().toString(),
+                    person.getNeighbourhood().toString()
+            ));
+        } catch (Exception e) {
+            UtilParam.throwAllParamsAreNotFilled(Person.objectNamePtBr);
+        }
         return params;
     }
 }

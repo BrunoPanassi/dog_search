@@ -10,6 +10,7 @@ import com.dogsearch.demo.util.param.UtilParam;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service @AllArgsConstructor
@@ -25,13 +26,18 @@ public class AnnouncementServiceImpl implements AnnouncementService {
         return announcementRepo.save(announcement);
     }
 
-    public static String[] getParams(Announcement announcement) {
-        String[] params = {
-                announcement.getTitle().toString(),
-                announcement.getText().toString(),
-                announcement.getCategory().getName(),
-                announcement.getPerson().getName()
-        };
+    public static List<String> getParams(Announcement announcement) throws Exception {
+        List<String> params = new ArrayList<>();
+        try {
+            params.addAll(List.of(
+                    announcement.getTitle().toString(),
+                    announcement.getText().toString(),
+                    announcement.getCategory().getName(),
+                    announcement.getPerson().getName())
+            );
+        } catch (Exception e) {
+            UtilParam.throwAllParamsAreNotFilled(Announcement.objectNamePtBr);
+        }
         return params;
     }
 

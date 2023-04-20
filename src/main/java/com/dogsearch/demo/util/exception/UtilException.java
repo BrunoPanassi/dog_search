@@ -18,11 +18,11 @@ public class UtilException {
     }
 
     public static String exceptionMessageBuilder(String message, List<String> params) {
-        StringBuilder builder = new StringBuilder();
         List<String> messageWords = List.of(message.split(" "));
         for(String word : messageWords) {
-            if (word.equals(MESSAGE_PARAM))
+            if (word.equals(MESSAGE_PARAM)) {
                 message = message.replace(MESSAGE_PARAM, params.remove(0));
+            }
         }
         return message;
     }
