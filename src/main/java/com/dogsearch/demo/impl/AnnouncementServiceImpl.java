@@ -21,8 +21,11 @@ public class AnnouncementServiceImpl implements AnnouncementService {
     public Announcement save(Announcement announcement) throws Exception {
         UtilParam.checkIfAllParamsAreFilled(getParams(announcement), Announcement.objectNamePtBr);
         AnnouncementDTO dto = AnnouncementConverter.CONVERTER.getDto(announcement);
-        if (!doesHaveAnId(dto) && doesPersonAlreadyExistsInDatabase(announcement))
-            UtilException.throwDefault(UtilException.USER_ALREADY_EXISTS);
+        if (!doesHaveAnId(dto) && doesAlreadyExistsInDatabase(announcement))
+            UtilException.throwDefault(UtilException.exceptionMessageBuilder(
+                    UtilException.ALREADY_EXISTS_WITH_PARAM,
+                    List.of(Announcement.objectNamePtBr)
+            ));
         return announcementRepo.save(announcement);
     }
 
@@ -45,7 +48,7 @@ public class AnnouncementServiceImpl implements AnnouncementService {
         return announcement.getId() != null;
     }
 
-    public boolean doesPersonAlreadyExistsInDatabase(Announcement announcement) {
+    public boolean doesAlreadyExistsInDatabase(Announcement announcement) {
         AnnouncementDTO announcementFound = find(announcement.getPerson().getName(), announcement.getTitle());
         return announcementFound != null;
     }
@@ -58,7 +61,7 @@ public class AnnouncementServiceImpl implements AnnouncementService {
     @Override
     public void delete(Announcement announcement) throws Exception {
         AnnouncementDTO announcementFound = find(announcement.getPerson().getName(), announcement.getTitle());
-        if (!doesHaveAnId(announcementFound)) {
+        if (announcementFound == null || !doesHaveAnId(announcementFound)) {
             UtilException.throwDefault(
                     UtilException.exceptionMessageBuilder(
                             UtilException.DONT_EXISTS_WITH_PARAM,

@@ -1,5 +1,6 @@
 package com.dogsearch.demo.impl;
 
+import com.dogsearch.demo.dto.announcement.AnnouncementDTO;
 import com.dogsearch.demo.model.Announcement;
 import com.dogsearch.demo.model.Category;
 import com.dogsearch.demo.model.Person;
@@ -91,9 +92,69 @@ class AnnouncementServiceImplTest {
 
     @Test
     void itShouldNotSaveBecauseAnnouncementTitleToTheSamePersonAlreadyExists() {
+        //given
+        Person personToSave = new Person(
+                "Bruno Henrique",
+                "Araçatuba",
+                "Concordia",
+                "(18) 9967 555"
+        );
+        Category caoGuia = new Category("Cão de Faro");
+        Announcement announcementToSave = new Announcement(
+                personToSave,
+                "Cão de Faro",
+                caoGuia,
+                "Cão de Faro para certas ocasiões"
+        );
+        List<String> exceptionMessageParams = new ArrayList<>(Arrays.asList(Announcement.objectNamePtBr));
+
+        AnnouncementDTO announcementDTO = new AnnouncementDTO(
+                11L,
+                announcementToSave.getTitle(),
+                announcementToSave.getText(),
+                personToSave.getName()
+        );
+
+        given(announcementService.find(personToSave.getName(), announcementToSave.getTitle())).willReturn(announcementDTO);
+
+        //when
+        //then
+        assertThatThrownBy(() -> announcementService.save(announcementToSave))
+                .isInstanceOf(Exception.class)
+                .hasMessageContaining(UtilException.exceptionMessageBuilder(UtilException.ALREADY_EXISTS_WITH_PARAM, exceptionMessageParams));
     }
 
     @Test
-    void itShouldDelete() {
+    void itShouldDelete() throws Exception {
+        //given
+        Person personToSave = new Person(
+                "Bruno Henrique",
+                "Araçatuba",
+                "Concordia",
+                "(18) 9967 555"
+        );
+        Category caoGuia = new Category("Cão de Faro");
+        Announcement announcementToSave = new Announcement(
+                personToSave,
+                "Cão de Faro",
+                caoGuia,
+                "Cão de Faro para certas ocasiões"
+        );
+        Long announcementId = 11L;
+
+        AnnouncementDTO announcementDTO = new AnnouncementDTO(
+                announcementId,
+                announcementToSave.getTitle(),
+                announcementToSave.getText(),
+                personToSave.getName()
+        );
+
+        given(announcementService.find(personToSave.getName(), announcementToSave.getTitle())).willReturn(announcementDTO);
+
+        //when
+        announcementService.delete(announcementToSave);
+
+        //then
+        verify(announcementRepo).deleteById(announcementId);
     }
 }

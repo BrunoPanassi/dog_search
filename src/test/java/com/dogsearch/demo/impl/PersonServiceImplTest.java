@@ -63,17 +63,10 @@ class PersonServiceImplTest {
                 "18 9976 555"
         );
 
-        PersonDTO personDTO = new PersonDTO() {
-            @Override
-            public Long getId() {
-                return personId;
-            }
-
-            @Override
-            public String getName() {
-                return personToSave.getName();
-            }
-        };
+        PersonDTO personDTO = new PersonDTO(
+                personId,
+                personToSave.getName()
+        );
 
         given(personService.findIdAndName(personToSave.getName(), personToSave.getPhoneNumber())).willReturn(personDTO);
 
@@ -97,17 +90,10 @@ class PersonServiceImplTest {
         );
 
         Long personId = 10L;
-        PersonDTO personDTO = new PersonDTO() {
-            @Override
-            public Long getId() {
-                return personId;
-            }
-
-            @Override
-            public String getName() {
-                return personToSave.getName();
-            }
-        };
+        PersonDTO personDTO = new PersonDTO(
+                personId,
+                personToSave.getName()
+        );
         personService.save(personToSave);
         when(personService.findIdAndName(personToSave.getName(), personToSave.getPhoneNumber())).thenReturn(personDTO);
 

@@ -1,6 +1,7 @@
 package com.dogsearch.demo.impl;
 
 import com.dogsearch.demo.dto.person.PersonDTO;
+import com.dogsearch.demo.mapper.person.PersonConverter;
 import com.dogsearch.demo.model.Person;
 import com.dogsearch.demo.repository.PersonRepo;
 import com.dogsearch.demo.service.PersonService;
@@ -22,7 +23,8 @@ public class PersonServiceImpl implements PersonService {
     @Override
     public Person save(Person person) throws Exception {
         UtilParam.checkIfAllParamsAreFilled(getParams(person), Person.objectNamePtBr);
-        if (!doesHaveAnId((PersonDTO) person) && doesPersonAlreadyExistsInDatabase(person))
+        PersonDTO personDTO = PersonConverter.CONVERTER.getDto(person);
+        if (!doesHaveAnId(personDTO) && doesPersonAlreadyExistsInDatabase(person))
             UtilException.throwDefault(UtilException.USER_ALREADY_EXISTS);
         return personRepo.save(person);
     }

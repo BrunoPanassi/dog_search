@@ -12,8 +12,9 @@ public interface PersonRepo extends JpaRepository<Person, Long> {
 
     @Query(value = """
             SELECT
-            person.id as id,
-            person.name as name
+            new com.dogsearch.demo.dto.person.PersonDTO(
+            person.id,
+            person.name) 
             FROM Person person
             WHERE UPPER(person.name) LIKE CONCAT('%', UPPER(:name), '%') 
             AND person.phoneNumber LIKE CONCAT('%', UPPER(:phoneNumber), '%')

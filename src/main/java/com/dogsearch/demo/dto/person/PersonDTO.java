@@ -1,6 +1,11 @@
 package com.dogsearch.demo.dto.person;
 
-public interface PersonDTO {
-    Long getId();
-    String getName();
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
+
+@Getter @Setter @AllArgsConstructor
+public class PersonDTO {
+    private Long id;
+    private String name;
 }
