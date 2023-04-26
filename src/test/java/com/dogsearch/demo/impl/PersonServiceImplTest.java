@@ -12,6 +12,8 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.List;
+
 import static org.junit.jupiter.api.Assertions.*;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
@@ -74,7 +76,10 @@ class PersonServiceImplTest {
         //then
         assertThatThrownBy(() -> personService.save(personToSave))
                 .isInstanceOf(Exception.class)
-                .hasMessageContaining(UtilException.USER_ALREADY_EXISTS);
+                .hasMessageContaining(UtilException.exceptionMessageBuilder(
+                        UtilException.ALREADY_EXISTS_WITH_PARAM,
+                        List.of(Person.objectNamePtBr)
+                ));
 
         verify(personRepo, never()).save(any());
     }
