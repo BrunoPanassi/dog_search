@@ -1,18 +1,21 @@
-package model;
+package com.dogsearch.demo.model;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
-@Entity(name = "role") @Getter
+import javax.management.ConstructorParameters;
+
+@Entity @Data
+@Getter
 @Setter
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class Role {
 
     @Id
     @SequenceGenerator(name = "seq_role", sequenceName = "seq_role")
     @GeneratedValue(strategy = GenerationType.IDENTITY, generator = "seq_role")
     private Long id;
-    private String role;
+
+    @NonNull
+    private String description;
 }
