@@ -25,7 +25,10 @@ public class PersonServiceImpl implements PersonService {
         UtilParam.checkIfAllParamsAreFilled(getParams(person), Person.objectNamePtBr);
         PersonDTO personDTO = PersonConverter.CONVERTER.getDto(person);
         if (!doesHaveAnId(personDTO) && doesPersonAlreadyExistsInDatabase(person))
-            UtilException.throwDefault(UtilException.USER_ALREADY_EXISTS);
+            UtilException.throwDefault(UtilException.exceptionMessageBuilder(
+                    UtilException.ALREADY_EXISTS_WITH_PARAM,
+                    List.of(Person.objectNamePtBr)
+            ));
         return personRepo.save(person);
     }
 

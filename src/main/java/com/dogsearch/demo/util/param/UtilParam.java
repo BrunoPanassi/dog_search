@@ -17,13 +17,8 @@ public class UtilParam {
     }
 
     public static void throwAllParamsAreNotFilled(String fromWhere) throws Exception {
-        List<String> exceptionMessageParams = new ArrayList<>(Arrays.asList(fromWhere));
-        UtilException.throwDefault(
-                UtilException.exceptionMessageBuilder(
-                        UtilException.PARAMS_DONT_FILLED_TO_THE_CLASS_WITH_PARAM,
-                        exceptionMessageParams
-                )
-        );
+        String[] exceptionMessageParams = {fromWhere};
+        UtilException.throwWithMessageBuilder(UtilException.PARAMS_DONT_FILLED_TO_THE_CLASS_WITH_PARAM, exceptionMessageParams);
     }
 
     private static long howManyParamsAreFilled(List<String> params) {

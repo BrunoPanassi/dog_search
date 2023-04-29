@@ -28,5 +28,5 @@ public interface RoleRepo extends JpaRepository<Role, Long> {
             join Role role
             where UPPER(role.description) like CONCAT('%', UPPER(:description), '%') 
             """)
-    PersonRoleDTO findPersonByRoleDescription(@Param("description") String description);
+    PersonRoleDTO findPersonByRoleDescription(@Param("description") String description);//TODO: Mudar para List em cada select com Like
 }
