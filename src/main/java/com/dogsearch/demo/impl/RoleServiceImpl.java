@@ -1,16 +1,11 @@
 package com.dogsearch.demo.impl;
 
-import com.dogsearch.demo.dto.announcement.AnnouncementDTO;
-import com.dogsearch.demo.mapper.announcement.AnnouncementConverter;
-import com.dogsearch.demo.model.Announcement;
 import com.dogsearch.demo.model.Person;
 import com.dogsearch.demo.model.Role;
 import com.dogsearch.demo.repository.RoleRepo;
 import com.dogsearch.demo.service.RoleService;
-import com.dogsearch.demo.util.array.UtilArray;
 import com.dogsearch.demo.util.exception.UtilException;
 import com.dogsearch.demo.util.param.UtilParam;
-import lombok.AllArgsConstructor;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -32,9 +27,8 @@ public class RoleServiceImpl implements RoleService {
     @Override
     public Role save(Role role) throws Exception {
         UtilParam.checkIfAllParamsAreFilled(getParams(role), Role.objectNamePtBr);
-        if (!doesHaveAnId(role) && doesAlreadyExistsInDatabase(role)) {
+        if (!doesHaveAnId(role) && doesAlreadyExistsInDatabase(role))
             UtilException.throwWithMessageBuilder(UtilException.ALREADY_EXISTS_WITH_PARAM, roleException);
-        }
         return roleRepo.save(role);
     }
 

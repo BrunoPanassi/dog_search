@@ -19,16 +19,14 @@ public class PersonServiceImpl implements PersonService {
 
     @Autowired
     private PersonRepo personRepo;
+    public static final String[] personException = {Person.objectNamePtBr};
 
     @Override
     public Person save(Person person) throws Exception {
         UtilParam.checkIfAllParamsAreFilled(getParams(person), Person.objectNamePtBr);
         PersonDTO personDTO = PersonConverter.CONVERTER.getDto(person);
         if (!doesHaveAnId(personDTO) && doesPersonAlreadyExistsInDatabase(person))
-            UtilException.throwDefault(UtilException.exceptionMessageBuilder(
-                    UtilException.ALREADY_EXISTS_WITH_PARAM,
-                    List.of(Person.objectNamePtBr)
-            ));
+            UtilException.throwWithMessageBuilder(UtilException.ALREADY_EXISTS_WITH_PARAM, personException);
         return personRepo.save(person);
     }
 
@@ -40,14 +38,8 @@ public class PersonServiceImpl implements PersonService {
     @Override
     public void delete(Person person) throws Exception {
         PersonDTO personFinded = findIdAndName(person.getName(), person.getPhoneNumber());
-        if (!doesHaveAnId(personFinded)) {
-            UtilException.throwDefault(
-                    UtilException.exceptionMessageBuilder(
-                            UtilException.DONT_EXISTS_WITH_PARAM,
-                            List.of(Person.objectNamePtBr)
-                    )
-            );
-        }
+        if (!doesHaveAnId(personFinded))
+            UtilException.throwWithMessageBuilder(UtilException.DONT_EXISTS_WITH_PARAM, personException);
         personRepo.deleteById(personFinded.getId());
     }
 

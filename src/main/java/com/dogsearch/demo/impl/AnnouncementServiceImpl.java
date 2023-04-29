@@ -17,15 +17,13 @@ import java.util.List;
 public class AnnouncementServiceImpl implements AnnouncementService {
 
     private AnnouncementRepo announcementRepo;
+    public static final String[] announcementException = {Announcement.objectNamePtBr};
     @Override
     public Announcement save(Announcement announcement) throws Exception {
         UtilParam.checkIfAllParamsAreFilled(getParams(announcement), Announcement.objectNamePtBr);
         AnnouncementDTO dto = AnnouncementConverter.CONVERTER.getDto(announcement);
         if (!doesHaveAnId(dto) && doesAlreadyExistsInDatabase(announcement))
-            UtilException.throwDefault(UtilException.exceptionMessageBuilder(
-                    UtilException.ALREADY_EXISTS_WITH_PARAM,
-                    List.of(Announcement.objectNamePtBr)
-            ));
+            UtilException.throwWithMessageBuilder(UtilException.ALREADY_EXISTS_WITH_PARAM, announcementException);
         return announcementRepo.save(announcement);
     }
 
@@ -61,14 +59,8 @@ public class AnnouncementServiceImpl implements AnnouncementService {
     @Override
     public void delete(Announcement announcement) throws Exception {
         AnnouncementDTO announcementFound = find(announcement.getPerson().getName(), announcement.getTitle());
-        if (announcementFound == null || !doesHaveAnId(announcementFound)) {
-            UtilException.throwDefault(
-                    UtilException.exceptionMessageBuilder(
-                            UtilException.DONT_EXISTS_WITH_PARAM,
-                            List.of(Announcement.objectNamePtBr)
-                    )
-            );
-        }
+        if (announcementFound == null || !doesHaveAnId(announcementFound))
+            UtilException.throwWithMessageBuilder(UtilException.DONT_EXISTS_WITH_PARAM, announcementException);
         announcementRepo.deleteById(announcementFound.getId());
     }
 }
