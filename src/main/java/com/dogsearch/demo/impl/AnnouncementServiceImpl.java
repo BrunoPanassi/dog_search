@@ -33,7 +33,7 @@ public class AnnouncementServiceImpl implements AnnouncementService {
             params.addAll(List.of(
                     announcement.getTitle().toString(),
                     announcement.getText().toString(),
-                    announcement.getCategory().getName(),
+                    announcement.getSubCategory().getName(),
                     announcement.getPerson().getName())
             );
         } catch (Exception e) {

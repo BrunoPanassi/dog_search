@@ -4,6 +4,7 @@ import com.dogsearch.demo.dto.announcement.AnnouncementDTO;
 import com.dogsearch.demo.model.Announcement;
 import com.dogsearch.demo.model.Category;
 import com.dogsearch.demo.model.Person;
+import com.dogsearch.demo.model.SubCategory;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,9 +20,14 @@ class AnnouncementRepoTest {
     PersonRepo personRepo;
     @Autowired
     CategoryRepo categoryRepo;
+    @Autowired
+    SubCategoryRepo subCategoryRepo;
     @AfterEach
     void tearDown() {
         announcementRepo.deleteAll();
+        personRepo.deleteAll();
+        categoryRepo.deleteAll();
+        subCategoryRepo.deleteAll();
     }
 
     @Test
@@ -33,15 +39,17 @@ class AnnouncementRepoTest {
                 "Concordia",
                 "(18) 9976 555"
         );
-        Category category = new Category("Pastor Alemão");
+        Category cao = new Category("Cão");
+        SubCategory caoGuia = new SubCategory("Cão Guia", cao);
         Announcement announcementToSave = new Announcement(
                 person,
                 "Pastor Alemão",
-                category,
+                caoGuia,
                 "4 anos de idade, usado como cão de guarda"
         );
         personRepo.save(person);
-        categoryRepo.save(category);
+        categoryRepo.save(cao);
+        subCategoryRepo.save(caoGuia);
 
         //when
         announcementRepo.save(announcementToSave);
@@ -60,16 +68,18 @@ class AnnouncementRepoTest {
                 "Concordia",
                 "(18) 9976 555"
         );
-        Category category = new Category("Pastor Alemão");
+        Category cao = new Category("Cão");
+        SubCategory caoGuia = new SubCategory("Cão Guia", cao);
         Announcement announcementToSave = new Announcement(
                 person,
                 "Pastor Alemão",
-                category,
+                caoGuia,
                 "4 anos de idade, usado como cão de guarda"
         );
         String wrongTitle = "pastor alemao";
         personRepo.save(person);
-        categoryRepo.save(category);
+        categoryRepo.save(cao);
+        subCategoryRepo.save(caoGuia);
 
         //when
         announcementRepo.save(announcementToSave);

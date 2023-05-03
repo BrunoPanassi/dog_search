@@ -19,8 +19,8 @@ public class Announcement {
     private Person person;
     @NonNull
     private String title;
-    @NonNull @ManyToOne @JoinColumn(name = "category_id")
-    private Category category;
+    @NonNull @ManyToOne @JoinColumn(name = "sub-category_id")
+    private SubCategory subCategory;
     @NonNull
     private String text;
     private List<String> images; //TODO: Change to Blob and test
