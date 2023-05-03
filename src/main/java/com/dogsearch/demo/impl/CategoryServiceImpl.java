@@ -1,8 +1,6 @@
 package com.dogsearch.demo.impl;
 
-import com.dogsearch.demo.dto.person.PersonDTO;
 import com.dogsearch.demo.model.Category;
-import com.dogsearch.demo.model.Person;
 import com.dogsearch.demo.repository.CategoryRepo;
 import com.dogsearch.demo.service.CategoryService;
 import com.dogsearch.demo.util.exception.UtilException;
@@ -19,14 +17,13 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Autowired
     private CategoryRepo categoryRepo;
+    public static final String[] categoryException = {Category.objectNamePtBr};
 
     @Override
     public Category save(Category category) throws Exception {
         UtilParam.checkIfAllParamsAreFilled(getParams(category), Category.objectNamePtBr);
-        if (!doesHaveAnId(category) && doesAlreadyExistsInDatabase(category)) {
-            List<String> params = new ArrayList<>() {{add(Category.objectNamePtBr);}};
-            UtilException.throwDefault(UtilException.exceptionMessageBuilder(UtilException.ALREADY_EXISTS_WITH_PARAM, params));
-        }
+        if (!doesHaveAnId(category) && doesAlreadyExistsInDatabase(category))
+            UtilException.throwWithMessageBuilder(UtilException.ALREADY_EXISTS_WITH_PARAM, categoryException);
         return categoryRepo.save(category);
     }
 
@@ -38,13 +35,8 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     public void delete(Category category) throws Exception {
         Category categoryFinded = find(category.getName());
-        if (!doesHaveAnId(categoryFinded)) {
-            UtilException.throwDefault(
-                    UtilException.exceptionMessageBuilder(
-                            UtilException.DONT_EXISTS_WITH_PARAM,
-                            List.of(Category.objectNamePtBr))
-            );
-        }
+        if (!doesHaveAnId(categoryFinded))
+            UtilException.throwWithMessageBuilder(UtilException.DONT_EXISTS_WITH_PARAM, categoryException);
         categoryRepo.deleteById(categoryFinded.getId());
     }
 
