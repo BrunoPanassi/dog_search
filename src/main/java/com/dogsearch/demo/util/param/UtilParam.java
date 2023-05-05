@@ -1,13 +1,12 @@
 package com.dogsearch.demo.util.param;
 
 import com.dogsearch.demo.util.exception.UtilException;
-
-import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class UtilParam {
+
+    public static final String PARAM_HAS_BEEN_SAVED = "O(a) ".concat(UtilException.MESSAGE_PARAM).concat(" foi salvo com sucesso.");
+
     public static void checkIfAllParamsAreFilled(List<String> params, String fromWhereAreBeingValidated) throws Exception {
         long paramsCount = params.size();
         boolean allParamsAreFilled = paramsCount == howManyParamsAreFilled(params);

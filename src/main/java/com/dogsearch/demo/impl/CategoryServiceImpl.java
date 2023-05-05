@@ -5,12 +5,14 @@ import com.dogsearch.demo.repository.CategoryRepo;
 import com.dogsearch.demo.service.CategoryService;
 import com.dogsearch.demo.util.exception.UtilException;
 import com.dogsearch.demo.util.param.UtilParam;
+import jdk.jshell.execution.Util;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service @AllArgsConstructor
 public class CategoryServiceImpl implements CategoryService {
@@ -28,20 +30,36 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public Category find(String name) throws Exception {
-        return categoryRepo.findByName(name);
+    public Category find(Long id, String name) throws Exception {
+        if (id == null || name == null)
+            UtilException.throwWithMessageBuilder(UtilException.PARAM_DONT_FILLED, categoryException);
+        Category categoryFounded = categoryRepo.findByIdAndName(id, name);
+        if (categoryFounded == null)
+            UtilException.throwWithMessageBuilder(UtilException.PARAM_NOT_FOUND, categoryException);
+        return categoryFounded;
     }
 
     @Override
-    public void delete(Category category) throws Exception {
-        Category categoryFinded = find(category.getName());
-        if (!doesHaveAnId(categoryFinded))
+    public Category findByName(String name) throws Exception {
+        if (name == null)
+            UtilException.throwWithMessageBuilder(UtilException.PARAM_DONT_FILLED, categoryException);
+        Category categoryFounded = categoryRepo.findByName(name);
+        if (categoryFounded == null)
+            UtilException.throwWithMessageBuilder(UtilException.PARAM_NOT_FOUND, categoryException);
+        return categoryFounded;
+    }
+
+    @Override
+    public Category delete(Long id) throws Exception {
+        Optional<Category> categoryFinded = categoryRepo.findById(id);
+        if (!categoryFinded.isPresent())
             UtilException.throwWithMessageBuilder(UtilException.DONT_EXISTS_WITH_PARAM, categoryException);
-        categoryRepo.deleteById(categoryFinded.getId());
+        categoryRepo.deleteById(id);
+        return categoryFinded.get();
     }
 
     public boolean doesAlreadyExistsInDatabase(Category category) throws Exception {
-        Category categoryFinded = find(category.getName());
+        Category categoryFinded = findByName(category.getName());
         return categoryFinded != null;
     }
 
@@ -49,7 +67,7 @@ public class CategoryServiceImpl implements CategoryService {
         return category.getId() != null;
     }
 
-    public static List<String> getParams(Category category) throws Exception {
+    public List<String> getParams(Category category) throws Exception {
         List<String> params = new ArrayList<>();
         try {
             params.add(category.getName());

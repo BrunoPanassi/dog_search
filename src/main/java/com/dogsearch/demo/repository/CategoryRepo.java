@@ -15,4 +15,13 @@ public interface CategoryRepo extends JpaRepository<Category, Long> {
             WHERE UPPER(category.name) LIKE CONCAT('%', UPPER(:name), '%') 
             """)
     Category findByName(@Param("name") String name);
+
+    @Query(value = """
+            SELECT
+            category
+            FROM Category category
+            WHERE (:name = '_default_') OR (UPPER(category.name) LIKE CONCAT('%', UPPER(:name), '%'))
+            AND (:id = 0) OR (category.id = :id) 
+            """)
+    Category findByIdAndName(@Param("id") Long id, @Param("name") String name);
 }
