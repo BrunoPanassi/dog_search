@@ -5,7 +5,8 @@ import java.util.List;
 
 public class UtilParam {
 
-    public static final String PARAM_HAS_BEEN_SAVED = "O(a) ".concat(UtilException.MESSAGE_PARAM).concat(" foi salvo com sucesso.");
+    public static final Long DEFAULT_LONG_PARAM_TO_REPO = 0L;
+    public static final String DEFAULT_STRING_PARAM_TO_REPO = "_default_";
 
     public static void checkIfAllParamsAreFilled(List<String> params, String fromWhereAreBeingValidated) throws Exception {
         long paramsCount = params.size();

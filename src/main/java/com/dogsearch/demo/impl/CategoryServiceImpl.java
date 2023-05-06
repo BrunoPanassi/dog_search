@@ -1,6 +1,7 @@
 package com.dogsearch.demo.impl;
 
 import com.dogsearch.demo.model.Category;
+import com.dogsearch.demo.model.SubCategory;
 import com.dogsearch.demo.repository.CategoryRepo;
 import com.dogsearch.demo.service.CategoryService;
 import com.dogsearch.demo.util.exception.UtilException;
@@ -24,29 +25,50 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     public Category save(Category category) throws Exception {
         UtilParam.checkIfAllParamsAreFilled(getParams(category), Category.objectNamePtBr);
-        if (!doesHaveAnId(category) && doesAlreadyExistsInDatabase(category))
-            UtilException.throwWithMessageBuilder(UtilException.ALREADY_EXISTS_WITH_PARAM, categoryException);
+        verifyIfDoensHaveAndIdButAlreadyExistsInDatabase(category);
+        verifyIfHaveAnIdButDoensExistsInDatabase(category);
         return categoryRepo.save(category);
     }
 
+    public void verifyIfDoensHaveAndIdButAlreadyExistsInDatabase(Category category) throws Exception {
+        if (!doesHaveAnId(category) && doesAlreadyExistsInDatabaseByName(category))
+            UtilException.throwWithMessageBuilder(UtilException.ALREADY_EXISTS_WITH_PARAM, categoryException);
+    }
+
+    private void verifyIfHaveAnIdButDoensExistsInDatabase(Category category) throws Exception {
+        if (doesHaveAnId(category) && !doesAlreadyExistsInDatabaseById(category))
+            UtilException.throwWithMessageBuilder(UtilException.DONT_EXISTS_WITH_PARAM, categoryException);
+    }
+
     @Override
-    public Category find(Long id, String name) throws Exception {
+    public List<Category> find(Long id, String name) throws Exception {
         if (id == null || name == null)
             UtilException.throwWithMessageBuilder(UtilException.PARAM_DONT_FILLED, categoryException);
-        Category categoryFounded = categoryRepo.findByIdAndName(id, name);
+        return ifCannotFindThrowEitherReturnCategoryBy(id, name);
+    }
+
+    public List<Category> ifCannotFindThrowEitherReturnCategoryBy(Long id, String name) throws Exception {
+        List<Category> categoryFounded = categoryRepo.findByIdAndName(id, name);
         if (categoryFounded == null)
             UtilException.throwWithMessageBuilder(UtilException.PARAM_NOT_FOUND, categoryException);
         return categoryFounded;
     }
 
     @Override
-    public Category findByName(String name) throws Exception {
+    public List<Category> findByName(String name) throws Exception {
         if (name == null)
             UtilException.throwWithMessageBuilder(UtilException.PARAM_DONT_FILLED, categoryException);
-        Category categoryFounded = categoryRepo.findByName(name);
-        if (categoryFounded == null)
+        return ifCannotFindThrowEitherReturnCategoryBy(UtilParam.DEFAULT_LONG_PARAM_TO_REPO, name);
+    }
+
+    @Override
+    public Category findById(Long id) throws Exception {
+        if (id == null)
+            UtilException.throwWithMessageBuilder(UtilException.PARAM_DONT_FILLED, categoryException);
+        Optional<Category> categoryFounded = categoryRepo.findById(id);
+        if (!categoryFounded.isPresent())
             UtilException.throwWithMessageBuilder(UtilException.PARAM_NOT_FOUND, categoryException);
-        return categoryFounded;
+        return categoryFounded.get();
     }
 
     @Override
@@ -58,9 +80,14 @@ public class CategoryServiceImpl implements CategoryService {
         return categoryFinded.get();
     }
 
-    public boolean doesAlreadyExistsInDatabase(Category category) throws Exception {
-        Category categoryFinded = findByName(category.getName());
+    public boolean doesAlreadyExistsInDatabaseByName(Category category) {
+        Category categoryFinded = categoryRepo.findByName(category.getName());
         return categoryFinded != null;
+    }
+
+    public boolean doesAlreadyExistsInDatabaseById(Category category) {
+        Optional<Category> categoryFinded = categoryRepo.findById(category.getId());
+        return categoryFinded.isPresent();
     }
 
     public boolean doesHaveAnId(Category category) {

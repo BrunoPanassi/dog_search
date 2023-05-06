@@ -1,6 +1,5 @@
 package com.dogsearch.demo.model;
 
-import com.dogsearch.demo.dto.category.CategoryCreateDTO;
 import jakarta.persistence.*;
 import lombok.*;
 
