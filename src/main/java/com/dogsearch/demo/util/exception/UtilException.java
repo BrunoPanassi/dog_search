@@ -30,11 +30,14 @@ public class UtilException {
 
     public static String exceptionMessageBuilder(String message, List<String> params) {
         List<String> messageWords = List.of(message.split(" "));
+        String messageCreated = "";
         for(String word : messageWords) {
             if (word.equals(MESSAGE_PARAM)) {
-                message = message.replace(MESSAGE_PARAM, params.remove(0));
+                messageCreated+= params.remove(0).concat(" ");
+            } else {
+                messageCreated+= word.concat((" "));
             }
         }
-        return message;
+        return messageCreated;
     }
 }
