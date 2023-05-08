@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service @AllArgsConstructor
 public class PersonServiceImpl implements PersonService {
@@ -20,36 +21,60 @@ public class PersonServiceImpl implements PersonService {
     @Autowired
     private PersonRepo personRepo;
     public static final String[] personException = {Person.objectNamePtBr};
+    public static final String[] phoneNumber = {"Número de telefone"};
 
     @Override
     public Person save(Person person) throws Exception {
         UtilParam.checkIfAllParamsAreFilled(getParams(person), Person.objectNamePtBr);
-        PersonDTO personDTO = PersonConverter.CONVERTER.getDto(person);
-        if (!doesHaveAnId(personDTO) && doesPersonAlreadyExistsInDatabase(person))
-            UtilException.throwWithMessageBuilder(UtilException.ALREADY_EXISTS_WITH_PARAM, personException);
+        verifyIfDoensHaveAndIdButAlreadyExistsInDatabase(person);
+        verifyIfHaveAnIdButDoensExistsInDatabase(person);
         return personRepo.save(person);
     }
 
-    @Override
-    public PersonDTO findIdAndName(String name, String phoneNumber) throws Exception {
-        return personRepo.findPersonNameByNameAndPhoneNumber(name, phoneNumber);
+    public void verifyIfDoensHaveAndIdButAlreadyExistsInDatabase(Person person) throws Exception {
+        if (!doesHaveAnId(person) && doesAlreadyExistsInDatabaseByPhoneNumber(person))
+            UtilException.throwWithMessageBuilder(UtilException.ALREADY_REGISTERED_WITH_PARAM, phoneNumber);
     }
 
-    @Override
-    public void delete(Person person) throws Exception {
-        PersonDTO personFinded = findIdAndName(person.getName(), person.getPhoneNumber());
-        if (!doesHaveAnId(personFinded))
+    private void verifyIfHaveAnIdButDoensExistsInDatabase(Person person) throws Exception {
+        if (doesHaveAnId(person) && !doesAlreadyExistsInDatabaseById(person))
             UtilException.throwWithMessageBuilder(UtilException.DONT_EXISTS_WITH_PARAM, personException);
-        personRepo.deleteById(personFinded.getId());
     }
 
-    public boolean doesHaveAnId(PersonDTO person) {
+    public List<PersonDTO> find(Long id, String name) throws Exception {
+        if (id == null || name == null)
+            UtilException.throwWithMessageBuilder(UtilException.PARAM_DONT_FILLED, personException);
+        return ifCannotFindThrowEitherReturnCategoryBy(id, name);
+    }
+
+    public List<PersonDTO> ifCannotFindThrowEitherReturnCategoryBy(Long id, String name) throws Exception {
+        List<PersonDTO> categoryFounded = personRepo.findByIdAndName(id, name);
+        if (categoryFounded == null)
+            UtilException.throwWithMessageBuilder(UtilException.PARAM_NOT_FOUND, personException);
+        return categoryFounded;
+    }
+
+    @Override
+    public Person delete(Long id) throws Exception {
+        Optional<Person> personFounded = personRepo.findById(id);
+        if (!personFounded.isPresent())
+            UtilException.throwWithMessageBuilder(UtilException.DONT_EXISTS_WITH_PARAM, personException);
+        personRepo.deleteById(id);
+        return personFounded.get();
+    }
+
+    public boolean doesAlreadyExistsInDatabaseByPhoneNumber(Person person) {
+        List<PersonDTO> personFinded = personRepo.findPersonNameByPhoneNumber(person.getPhoneNumber());
+        return personFinded.size() > 0;
+    }
+
+    public boolean doesAlreadyExistsInDatabaseById(Person person) {
+        Optional<Person> personFinded = personRepo.findById(person.getId());
+        return personFinded.isPresent();
+    }
+
+    public boolean doesHaveAnId(Person person) {
         return person.getId() != null;
-    }
-
-    public boolean doesPersonAlreadyExistsInDatabase(Person person) throws Exception {
-        PersonDTO personFinded = findIdAndName(person.getName(), person.getPhoneNumber());
-        return personFinded != null;
     }
 
     public static List<String> getParams(Person person) throws Exception {
