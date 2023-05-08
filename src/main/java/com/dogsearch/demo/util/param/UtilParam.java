@@ -1,13 +1,13 @@
 package com.dogsearch.demo.util.param;
 
 import com.dogsearch.demo.util.exception.UtilException;
-
-import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class UtilParam {
+
+    public static final Long DEFAULT_LONG_PARAM_TO_REPO = 0L;
+    public static final String DEFAULT_STRING_PARAM_TO_REPO = "_default_";
+
     public static void checkIfAllParamsAreFilled(List<String> params, String fromWhereAreBeingValidated) throws Exception {
         long paramsCount = params.size();
         boolean allParamsAreFilled = paramsCount == howManyParamsAreFilled(params);

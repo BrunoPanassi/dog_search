@@ -5,6 +5,5 @@ import com.dogsearch.demo.model.Person;
 
 public interface PersonService {
     Person save(Person person) throws Exception;
-    PersonDTO findIdAndName(String name, String phoneNumber) throws Exception;
-    void delete(Person person) throws Exception;
+    Person delete(Long id) throws Exception;
 }

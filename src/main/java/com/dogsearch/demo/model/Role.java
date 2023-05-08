@@ -8,6 +8,7 @@ import javax.management.ConstructorParameters;
 @Entity @Data
 @Getter
 @Setter
+@NoArgsConstructor(force = true)
 @RequiredArgsConstructor
 public class Role {
 

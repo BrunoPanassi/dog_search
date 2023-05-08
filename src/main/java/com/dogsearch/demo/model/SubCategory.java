@@ -4,7 +4,8 @@ import jakarta.persistence.*;
 import lombok.*;
 
 @Entity @Data
-@Getter @Setter @RequiredArgsConstructor
+@Getter @Setter
+@RequiredArgsConstructor @NoArgsConstructor(force = true)
 public class SubCategory {
 
     public static String objectNamePtBr = "Sub-Categoria";
@@ -17,4 +18,10 @@ public class SubCategory {
     private String name;
     @NonNull @ManyToOne @JoinColumn(name = "category_id")
     private Category category;
+
+    public SubCategory(Long id, @NonNull String name, @NonNull Category category) {
+        this.id = id;
+        this.name = name;
+        this.category = category;
+    }
 }

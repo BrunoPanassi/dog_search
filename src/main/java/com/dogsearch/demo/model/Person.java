@@ -1,5 +1,7 @@
 package com.dogsearch.demo.model;
 
+import com.dogsearch.demo.dto.person.PersonSaveDTO;
+import com.dogsearch.demo.util.param.UtilParam;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -8,7 +10,8 @@ import java.util.Collection;
 import java.util.List;
 
 @Entity @Data
-@Getter @Setter @RequiredArgsConstructor
+@Getter @Setter
+@RequiredArgsConstructor @NoArgsConstructor(force = true)
 public class Person {
 
     public static final String objectNamePtBr = "Pessoa";
@@ -29,4 +32,14 @@ public class Person {
     private Collection<Role> roles = new ArrayList<>();
     @OneToMany(mappedBy = "person")
     private List<Announcement> announcements;
+
+    public Person (PersonSaveDTO personDTO, Long id) {
+        this.name = personDTO.getName();
+        this.city = personDTO.getCity();
+        this.neighbourhood = personDTO.getNeighbourhood();
+        this.phoneNumber = personDTO.getPhoneNumber();
+        if (id > UtilParam.DEFAULT_LONG_PARAM_TO_REPO) {
+            this.id = id;
+        }
+    }
 }
