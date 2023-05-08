@@ -81,8 +81,8 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     public boolean doesAlreadyExistsInDatabaseByName(Category category) {
-        Category categoryFinded = categoryRepo.findByName(category.getName());
-        return categoryFinded != null;
+        List<Category> categoryFinded = categoryRepo.findByName(category.getName());
+        return categoryFinded.size() > 0;
     }
 
     public boolean doesAlreadyExistsInDatabaseById(Category category) {

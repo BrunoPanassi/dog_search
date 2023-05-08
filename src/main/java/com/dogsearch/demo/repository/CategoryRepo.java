@@ -16,7 +16,7 @@ public interface CategoryRepo extends JpaRepository<Category, Long> {
             FROM Category category
             WHERE UPPER(category.name) LIKE CONCAT('%', UPPER(:name), '%') 
             """)
-    Category findByName(@Param("name") String name);
+    List<Category> findByName(@Param("name") String name);
 
     @Query(value = """
             SELECT
