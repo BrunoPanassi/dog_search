@@ -10,6 +10,6 @@ public interface RoleService {
     List<Role> find(Long id, String description) throws Exception;
     Role delete(Long id) throws Exception;
     Person addRole(Person person, Role role) throws Exception;
-    void addRoleAndSavePerson(Person person, Role role) throws Exception;
+    void addRoleAndSavePerson(Long personId, Long roleId) throws Exception;
     void addMultipleRoles(Person person, List<Role> roles) throws Exception;
 }

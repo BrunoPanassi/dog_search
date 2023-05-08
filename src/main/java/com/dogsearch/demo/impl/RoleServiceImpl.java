@@ -51,6 +51,13 @@ public class RoleServiceImpl implements RoleService {
         return ifCannotFindThrowEitherReturnRoleBy(id, description);
     }
 
+    public List<String> findRolesByPersonId(Long id) throws Exception {
+        List<String> roles = roleRepo.findRolesByPersonId(id);
+        if (roles == null || roles.size() < 1)
+            UtilException.throwWithMessageBuilder(UtilException.PARAM_DO_NOT_HAVE_PARAM, personRoleException);
+        return roles;
+    }
+
     public List<Role> ifCannotFindThrowEitherReturnRoleBy(Long id, String name) throws Exception {
         List<Role> roleFounded = roleRepo.findByIdAndName(id, name);
         if (roleFounded == null)
@@ -83,17 +90,26 @@ public class RoleServiceImpl implements RoleService {
         return roleFounded.isPresent();
     }
 
+    public Role verifyIfExists(Long id) throws Exception {
+        Optional<Role> roleFounded = roleRepo.findById(id);
+        if (!roleFounded.isPresent())
+            UtilException.throwWithMessageBuilder(UtilException.DONT_EXISTS_WITH_PARAM, roleException);
+        return roleFounded.get();
+    }
+
+    @Override
+    public void addRoleAndSavePerson(Long personId, Long roleId) throws Exception {
+        Person person = personService.verifyIfExists(personId);
+        Role role = verifyIfExists(roleId);
+        person = addRole(person, role);
+        personService.save(person);
+    }
+
     @Override
     public Person addRole(Person person, Role role) throws Exception {
         verifyIfPersonAlreadyHasThisRole(person, role);
         person.getRoles().add(role);
         return person;
-    }
-
-    @Override
-    public void addRoleAndSavePerson(Person person, Role role) throws Exception {
-        person = addRole(person, role);
-        personService.save(person);
     }
 
     @Override

@@ -1,6 +1,7 @@
 package com.dogsearch.demo.repository;
 
 import com.dogsearch.demo.dto.person.PersonDTO;
+import com.dogsearch.demo.model.Announcement;
 import com.dogsearch.demo.model.Person;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -53,4 +54,13 @@ public interface PersonRepo extends JpaRepository<Person, Long> {
             AND (:id = 0) OR (person.id = :id)
             """)
     List<PersonDTO> findByIdAndName(@Param("id") Long id, @Param("name") String name);
+
+    @Query(value = """
+            SELECT
+            announcement
+            FROM Person person
+            JOIN person.announcements announcement
+            WHERE person.id = :id
+            """)
+    List<Announcement> findAnnouncementsByPersonId(@Param("id") Long personId);
 }

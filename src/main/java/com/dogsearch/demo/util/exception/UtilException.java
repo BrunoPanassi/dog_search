@@ -15,6 +15,7 @@ public class UtilException {
     public static final String PARAM_DONT_FILLED = "Parâmetro do(a) ".concat(MESSAGE_PARAM).concat(" não preenchido.");
     public static final String THIS_PARAM_ALREADY_HAVE_THIS_PARAM = "Essa(a) ".concat(MESSAGE_PARAM).concat(" já possui esse ").concat(MESSAGE_PARAM);
     public static final String PARAM_NOT_FOUND = MESSAGE_PARAM.concat(" não encontrado(a).");
+    public static final String PARAM_DO_NOT_HAVE_PARAM = MESSAGE_PARAM.concat(" não possui ").concat(MESSAGE_PARAM);
 
     public static void throwDefault(String exception) throws Exception {
         throw new Exception(exception);
