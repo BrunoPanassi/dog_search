@@ -1,6 +1,7 @@
 package com.dogsearch.demo.impl;
 
 import com.dogsearch.demo.model.Category;
+import com.dogsearch.demo.model.Person;
 import com.dogsearch.demo.model.SubCategory;
 import com.dogsearch.demo.repository.SubCategoryRepo;
 import com.dogsearch.demo.service.SubcategoryService;
@@ -88,6 +89,13 @@ public class SubCategoryServiceImpl implements SubcategoryService {
     public boolean doesAlreadyExistsInDatabaseByName(SubCategory subCategory) {
         SubCategory subCategoryFinded = subCategoryRepo.findByName(subCategory.getName());
         return subCategoryFinded != null;
+    }
+
+    public SubCategory verifyIfExists(Long id) throws Exception {
+        Optional<SubCategory> subCategoryFounded = subCategoryRepo.findById(id);
+        if (!subCategoryFounded.isPresent())
+            UtilException.throwWithMessageBuilder(UtilException.DONT_EXISTS_WITH_PARAM, subCategoryException);
+        return subCategoryFounded.get();
     }
 
     public List<String> getParams(SubCategory subCategory) throws Exception {

@@ -2,6 +2,7 @@ package com.dogsearch.demo.model;
 
 import com.dogsearch.demo.dto.person.PersonSaveDTO;
 import com.dogsearch.demo.util.param.UtilParam;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -30,7 +31,7 @@ public class Person {
     private String phoneNumber;
     @ManyToMany(fetch = FetchType.EAGER)
     private Collection<Role> roles = new ArrayList<>();
-    @OneToMany(mappedBy = "person")
+    @OneToMany(mappedBy = "person") @JsonManagedReference
     private List<Announcement> announcements;
 
     public Person (PersonSaveDTO personDTO, Long id) {
