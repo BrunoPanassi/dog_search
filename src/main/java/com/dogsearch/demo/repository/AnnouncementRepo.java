@@ -34,10 +34,19 @@ public interface AnnouncementRepo extends JpaRepository<Announcement, Long> {
             a.title,
             a.text,
             p.name) 
-            FROM announcement a
-            INNER JOIN person p ON p.id = a.person_id
-            WHERE ((:personId = 0) OR (a.person_id = :personId)) 
+            FROM Announcement a
+            INNER JOIN person p ON p.id = a.person.id
+            WHERE ((:personId = 0) OR (a.person.id = :personId)) 
             AND ((:title = '_default_') OR (UPPER(a.title) like CONCAT('%', UPPER(:title), '%')))
             """)
     List<AnnouncementDTO> findByTitleAndPersonId(@Param("personId") Long personId, @Param("title") String title);
+
+    @Query(value = """
+            SELECT
+            p.city
+            FROM Announcement a
+            JOIN a.person p
+            GROUP BY p.city
+            """)
+    List<String> getCities();
 }

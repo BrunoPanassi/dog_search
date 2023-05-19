@@ -41,6 +41,26 @@ public class AnnouncementServiceImpl implements AnnouncementService {
         return announcementRepo.save(announcement);
     }
 
+    @Override
+    public List<AnnouncementDTO> find(Long personId, String title) throws Exception {
+        if (personId == null || title == null)
+            UtilException.throwWithMessageBuilder(UtilException.PARAM_DONT_FILLED, announcementException);
+        return ifCannotFindThrowEitherReturnAnnouncementBy(personId, title);
+    }
+
+    @Override
+    public Announcement delete(Long id) throws Exception {
+        Optional<Announcement> announcementFounded = announcementRepo.findById(id);
+        if (!announcementFounded.isPresent())
+            UtilException.throwWithMessageBuilder(UtilException.DONT_EXISTS_WITH_PARAM, announcementException);
+        announcementRepo.deleteById(id);
+        return announcementFounded.get();
+    }
+
+    public List<String> getCities() {
+        return announcementRepo.getCities();
+    }
+
     public void verifyIfDoensHaveAndIdButAlreadyExistsInDatabase(Announcement announcement) throws Exception {
         if (!doesHaveAnId(announcement) && doesAlreadyExistsInDatabaseByName(announcement))
             UtilException.throwWithMessageBuilder(UtilException.ALREADY_EXISTS_WITH_PARAM, announcementException);
@@ -80,13 +100,6 @@ public class AnnouncementServiceImpl implements AnnouncementService {
         return announcementFounded.isPresent();
     }
 
-    @Override
-    public List<AnnouncementDTO> find(Long personId, String title) throws Exception {
-        if (personId == null || title == null)
-            UtilException.throwWithMessageBuilder(UtilException.PARAM_DONT_FILLED, announcementException);
-        return ifCannotFindThrowEitherReturnAnnouncementBy(personId, title);
-    }
-
     public List<AnnouncementDTO> ifCannotFindThrowEitherReturnAnnouncementBy(Long personId, String title) throws Exception {
         List<AnnouncementDTO> announcementFounded = announcementRepo.findByTitleAndPersonId(personId, title);
         if (announcementFounded == null)
@@ -107,14 +120,5 @@ public class AnnouncementServiceImpl implements AnnouncementService {
                 dto.getText(),
                 dto.getImages()
         );
-    }
-
-    @Override
-    public Announcement delete(Long id) throws Exception {
-        Optional<Announcement> announcementFounded = announcementRepo.findById(id);
-        if (!announcementFounded.isPresent())
-            UtilException.throwWithMessageBuilder(UtilException.DONT_EXISTS_WITH_PARAM, announcementException);
-        announcementRepo.deleteById(id);
-        return announcementFounded.get();
     }
 }

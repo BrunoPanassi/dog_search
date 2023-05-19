@@ -61,4 +61,13 @@ public class AnnouncementControlller {
             return ResponseEntity.badRequest().body(e.toString());
         }
     }
+
+    @GetMapping("/cities")
+    public ResponseEntity getCities() {
+        try {
+            return ResponseEntity.ok().body(announcementService.getCities());
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.toString());
+        }
+    }
 }
