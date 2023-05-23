@@ -14,6 +14,7 @@ import java.net.URI;
 
 @RestController
 @RequestMapping("/announcement")
+@CrossOrigin(origins = "http://localhost:3000")
 @RequiredArgsConstructor
 public class AnnouncementControlller {
     @Autowired
@@ -62,7 +63,6 @@ public class AnnouncementControlller {
         }
     }
 
-    @CrossOrigin(origins = "http://localhost:3000")
     @GetMapping("/cities")
     public ResponseEntity getCities() {
         try {
