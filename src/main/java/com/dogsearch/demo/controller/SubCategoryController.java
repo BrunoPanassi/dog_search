@@ -16,6 +16,7 @@ import java.net.URI;
 
 @RestController
 @RequestMapping("/sub-category")
+@CrossOrigin(origins = "http://localhost:3000")
 @RequiredArgsConstructor
 public class SubCategoryController {
     private final CategoryServiceImpl categoryService;

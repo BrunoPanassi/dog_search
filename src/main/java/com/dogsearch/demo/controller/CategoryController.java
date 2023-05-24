@@ -13,6 +13,7 @@ import java.net.URI;
 
 @RestController
 @RequestMapping("/category")
+@CrossOrigin(origins = "http://localhost:3000")
 @RequiredArgsConstructor
 public class CategoryController {
     private final CategoryServiceImpl categoryService;
