@@ -61,6 +61,10 @@ public class AnnouncementServiceImpl implements AnnouncementService {
         return announcementRepo.getCities();
     }
 
+    public List<AnnouncementDTO> getByCityAndSubCategory(String city, String subCategory) {
+        return announcementRepo.getByCityAndSubCategory(city, subCategory);
+    }
+
     public void verifyIfDoensHaveAndIdButAlreadyExistsInDatabase(Announcement announcement) throws Exception {
         if (!doesHaveAnId(announcement) && doesAlreadyExistsInDatabaseByName(announcement))
             UtilException.throwWithMessageBuilder(UtilException.ALREADY_EXISTS_WITH_PARAM, announcementException);

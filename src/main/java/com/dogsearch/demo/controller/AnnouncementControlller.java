@@ -1,5 +1,6 @@
 package com.dogsearch.demo.controller;
 
+import com.dogsearch.demo.dto.announcement.AnnouncementCitySubCategoryDTO;
 import com.dogsearch.demo.dto.announcement.AnnouncementSaveDTO;
 import com.dogsearch.demo.impl.AnnouncementServiceImpl;
 import com.dogsearch.demo.model.Announcement;
@@ -67,6 +68,15 @@ public class AnnouncementControlller {
     public ResponseEntity getCities() {
         try {
             return ResponseEntity.ok().body(announcementService.getCities());
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.toString());
+        }
+    }
+
+    @PostMapping("/city-and-sub-category")
+    public ResponseEntity getByCityAndSubCategory(@RequestBody AnnouncementCitySubCategoryDTO dto) {
+        try {
+            return ResponseEntity.ok().body(announcementService.getByCityAndSubCategory(dto.getCity(), dto.getSubCategory()));
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.toString());
         }

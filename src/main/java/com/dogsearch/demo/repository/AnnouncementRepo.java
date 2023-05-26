@@ -49,4 +49,19 @@ public interface AnnouncementRepo extends JpaRepository<Announcement, Long> {
             GROUP BY p.city
             """)
     List<String> getCities();
+
+    @Query(value = """
+            SELECT
+            new com.dogsearch.demo.dto.announcement.AnnouncementDTO(
+            a.id,
+            a.title,
+            a.text,
+            p.name) 
+            FROM Announcement a
+            JOIN a.person p
+            JOIN a.subCategory s
+            WHERE p.city = :city
+            AND s.name = :subCategory
+            """)
+    List<AnnouncementDTO> getByCityAndSubCategory(@Param("city") String city, @Param("subCategory") String subCategory);
 }
