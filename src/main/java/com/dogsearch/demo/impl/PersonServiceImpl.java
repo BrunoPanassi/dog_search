@@ -24,6 +24,7 @@ public class PersonServiceImpl implements PersonService {
     public static final String[] personException = {Person.objectNamePtBr};
     public static final String[] personAnnouncementException = {Person.objectNamePtBr, Announcement.objectNamePtBr};
     public static final String[] phoneNumber = {"Número de telefone"};
+    public static final String[] email = {"Email"};
 
     @Override
     public Person save(Person person) throws Exception {
@@ -34,8 +35,13 @@ public class PersonServiceImpl implements PersonService {
     }
 
     public void verifyIfDoensHaveAndIdButAlreadyExistsInDatabase(Person person) throws Exception {
-        if (!doesHaveAnId(person) && doesAlreadyExistsInDatabaseByPhoneNumber(person))
-            UtilException.throwWithMessageBuilder(UtilException.ALREADY_REGISTERED_WITH_PARAM, phoneNumber);
+        if (!doesHaveAnId(person)) {
+            if (doesAlreadyExistsInDatabaseByPhoneNumber(person.getPhoneNumber()))
+                UtilException.throwWithMessageBuilder(UtilException.ALREADY_REGISTERED_WITH_PARAM, phoneNumber);
+            if (doesAlreadyExistsInDatabaseByEmail(person.getEmail()))
+                UtilException.throwWithMessageBuilder(UtilException.ALREADY_REGISTERED_WITH_PARAM, email);
+        }
+
     }
 
     private void verifyIfHaveAnIdButDoensExistsInDatabase(Person person) throws Exception {
@@ -72,9 +78,14 @@ public class PersonServiceImpl implements PersonService {
         return personFounded.get();
     }
 
-    public boolean doesAlreadyExistsInDatabaseByPhoneNumber(Person person) {
-        List<PersonDTO> personFinded = personRepo.findPersonNameByPhoneNumber(person.getPhoneNumber());
-        return personFinded.size() > 0;
+    public boolean doesAlreadyExistsInDatabaseByPhoneNumber(String phoneNumber) {
+        Optional<PersonDTO> personFinded = personRepo.findPersonNameByPhoneNumber(phoneNumber);
+        return personFinded.isPresent();
+    }
+
+    public boolean doesAlreadyExistsInDatabaseByEmail(String email) {
+        Optional<Person> personFinded = personRepo.findPersonByEmail(email);
+        return personFinded.isPresent();
     }
 
     public boolean doesAlreadyExistsInDatabaseById(Person person) {

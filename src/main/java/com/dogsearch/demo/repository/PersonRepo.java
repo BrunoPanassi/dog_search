@@ -9,6 +9,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface PersonRepo extends JpaRepository<Person, Long> {
@@ -30,9 +31,17 @@ public interface PersonRepo extends JpaRepository<Person, Long> {
             person.id,
             person.name) 
             FROM Person person
-            WHERE person.phoneNumber LIKE CONCAT('%', UPPER(:phoneNumber), '%')
+            WHERE UPPER(person.phoneNumber) = UPPER(:phoneNumber)
             """)
-    List<PersonDTO> findPersonNameByPhoneNumber(@Param("phoneNumber") String phoneNumber);
+    Optional<PersonDTO> findPersonNameByPhoneNumber(@Param("phoneNumber") String phoneNumber);
+
+    @Query(value = """
+            SELECT
+            person
+            FROM Person person
+            WHERE UPPER(person.email) = UPPER(:email)
+            """)
+    Optional<Person> findPersonByEmail(@Param("email") String email);
 
     @Query(value = """
             SELECT
@@ -43,6 +52,14 @@ public interface PersonRepo extends JpaRepository<Person, Long> {
             WHERE UPPER(person.name) LIKE CONCAT('%', UPPER(:name), '%') 
             """)
     List<PersonDTO> findByName(@Param("name") String name);
+
+    @Query(value = """
+            SELECT
+            person
+            FROM Person person
+            WHERE UPPER(person.name) = UPPER(:name) 
+            """)
+    Optional<Person> findPersonByName(@Param("name") String name);
 
     @Query(value = """
             SELECT

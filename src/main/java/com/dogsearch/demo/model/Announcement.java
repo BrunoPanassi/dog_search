@@ -7,7 +7,7 @@ import lombok.*;
 import java.util.List;
 
 @Entity @Data
-@Getter @Setter @RequiredArgsConstructor
+@Getter @Setter @RequiredArgsConstructor @NoArgsConstructor
 public class Announcement {
 
     public static final String objectNamePtBr = "Anúncio";
