@@ -81,4 +81,13 @@ public class AnnouncementControlller {
             return ResponseEntity.badRequest().body(e.toString());
         }
     }
+
+    @GetMapping("/by-email/{email}")
+    public ResponseEntity getByUser(@PathVariable("email") String email) {
+        try {
+            return ResponseEntity.ok().body(announcementService.getByUser(email));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.toString());
+        }
+    }
 }

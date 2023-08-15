@@ -22,10 +22,10 @@ public interface AnnouncementRepo extends JpaRepository<Announcement, Long> {
             p.name) 
             from Announcement a
             join a.person p
-            where UPPER(p.name) like CONCAT('%', UPPER(:personName), '%')
+            where UPPER(p.email) like CONCAT('%', UPPER(:personEmail), '%')
             AND UPPER(a.title) like CONCAT('%', UPPER(:title), '%')
             """)
-    List<AnnouncementDTO> find(@Param("personName") String personName, @Param("title") String title);
+    List<AnnouncementDTO> find(@Param("personEmail") String personEmail, @Param("title") String title);
 
     @Query(value = """
             SELECT

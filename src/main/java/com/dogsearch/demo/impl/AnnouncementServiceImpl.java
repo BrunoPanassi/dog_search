@@ -125,4 +125,11 @@ public class AnnouncementServiceImpl implements AnnouncementService {
                 dto.getImages()
         );
     }
+
+    public Object getByUser(String email) throws Exception {
+        List<AnnouncementDTO> announcements = announcementRepo.find(email, UtilParam.DEFAULT_STRING_PARAM_TO_REPO);
+        if (announcements == null)
+            UtilException.throwWithMessageBuilder(UtilException.PARAM_NOT_FOUND, announcementException);
+        return announcements;
+    }
 }

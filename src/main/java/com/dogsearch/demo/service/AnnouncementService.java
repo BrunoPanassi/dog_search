@@ -10,4 +10,5 @@ public interface AnnouncementService {
     Announcement save(Announcement announcement) throws Exception;
     List<AnnouncementDTO> find(Long personId, String title) throws Exception;
     Announcement delete(Long id) throws Exception;
+    public Object getByUser(String email) throws Exception;
 }
