@@ -17,7 +17,7 @@ import java.net.URI;
 @RequestMapping("/announcement")
 @CrossOrigin(origins = "http://localhost:3000")
 @RequiredArgsConstructor
-public class AnnouncementControlller {
+public class AnnouncementControlller { // TODO: Trocar para somente dois L
     @Autowired
     private final AnnouncementServiceImpl announcementService;
 
