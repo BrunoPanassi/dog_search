@@ -14,4 +14,7 @@ public class AuthenticationResponse {
     private String token;
     private HttpStatus statusCode;
     private String message;
+    private Long personId;
+    private String email;
+    private String name;
 }

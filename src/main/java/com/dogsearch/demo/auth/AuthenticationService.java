@@ -78,6 +78,9 @@ public class AuthenticationService {
         return AuthenticationResponse.builder()
                 .token(jwtToken)
                 .statusCode(HttpStatus.OK)
+                .personId(person.getId())
+                .name(person.getName())
+                .email(person.getEmail())
                 .build();
     }
 }

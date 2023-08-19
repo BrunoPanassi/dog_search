@@ -23,10 +23,10 @@ public class AuthenticationController {
     }
 
     @PostMapping("/authenticate")
-    public ResponseEntity<String> authenticate(@RequestBody AuthenticationRequest request) throws Exception {
+    public ResponseEntity authenticate(@RequestBody AuthenticationRequest request) throws Exception {
         AuthenticationResponse response = authenticationService.authenticate(request);
         if (response.getStatusCode() == HttpStatus.OK) {
-            return ResponseEntity.ok(response.getToken());
+            return ResponseEntity.ok().body(response);
         }
         return ResponseEntity.badRequest().body(response.getMessage());
     }

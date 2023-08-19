@@ -32,13 +32,16 @@ public class SecurityConfiguration {
             .authorizeHttpRequests()
             .requestMatchers("/person/**").hasAuthority("User")
             .requestMatchers("/announcement/by-email/").hasAuthority("User")
+            .requestMatchers("/announcement/save").hasAuthority("User")
+            .requestMatchers("/announcement/save/**").hasAuthority("User")
             .requestMatchers(
                     "/auth/**",
                     "/category",
                     "/sub-category",
                     "/sub-category/category",
                     "/announcement",
-                    "/announcement/cities").permitAll()
+                    "/announcement/cities",
+                    "/announcement/city-and-sub-category").permitAll()
             .anyRequest().authenticated()
             .and()
             .sessionManagement()

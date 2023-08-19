@@ -22,8 +22,8 @@ public interface AnnouncementRepo extends JpaRepository<Announcement, Long> {
             p.name) 
             from Announcement a
             join a.person p
-            where UPPER(p.email) like CONCAT('%', UPPER(:personEmail), '%')
-            AND UPPER(a.title) like CONCAT('%', UPPER(:title), '%')
+            where UPPER(p.email) = UPPER(:personEmail)
+            AND ((:title = '_default_') OR UPPER(a.title) like CONCAT('%', UPPER(:title), '%'))
             """)
     List<AnnouncementDTO> find(@Param("personEmail") String personEmail, @Param("title") String title);
 
