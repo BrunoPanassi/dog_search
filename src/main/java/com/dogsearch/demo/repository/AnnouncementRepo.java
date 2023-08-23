@@ -14,15 +14,18 @@ import java.util.List;
 public interface AnnouncementRepo extends JpaRepository<Announcement, Long> {
 
     @Query("""
-            select
+            SELECT
             new com.dogsearch.demo.dto.announcement.AnnouncementDTO(
             a.id,
             a.title,
             a.text,
-            p.name) 
-            from Announcement a
-            join a.person p
-            where UPPER(p.email) = UPPER(:personEmail)
+            p.name,
+            sc.category.name,
+            sc.id) 
+            FROM Announcement a
+            JOIN a.person p
+            JOIN a.subCategory sc
+            WHERE UPPER(p.email) = UPPER(:personEmail)
             AND ((:title = '_default_') OR UPPER(a.title) like CONCAT('%', UPPER(:title), '%'))
             """)
     List<AnnouncementDTO> find(@Param("personEmail") String personEmail, @Param("title") String title);

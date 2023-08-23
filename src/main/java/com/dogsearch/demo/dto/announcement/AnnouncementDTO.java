@@ -10,4 +10,6 @@ public class AnnouncementDTO {
     private String title;
     private String text;
     private String personName;
+    private String category;
+    private Long subCategoryId;
 }

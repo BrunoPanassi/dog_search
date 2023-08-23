@@ -14,11 +14,15 @@ public interface AnnouncementConverter {
     @Mapping(source = "dto.title", target = "title")
     @Mapping(source = "dto.text", target = "text")
     @Mapping(source = "dto.personName", target = "person.name")
+    @Mapping(source = "dto.category", target = "subCategory.category.name")
+    @Mapping(source = "dto.subCategoryId", target = "subCategory.id")
     Announcement getEntity(AnnouncementDTO dto);
 
     @Mapping(source = "announcement.id", target = "id")
     @Mapping(source = "announcement.title", target = "title")
     @Mapping(source = "announcement.text", target = "text")
     @Mapping(source = "announcement.person.name", target = "personName")
+    @Mapping(source = "announcement.subCategory.category.name", target = "category")
+    @Mapping(source = "announcement.subCategory.id", target = "subCategoryId")
     AnnouncementDTO getDto(Announcement announcement);
 }
