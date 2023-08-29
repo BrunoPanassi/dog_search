@@ -16,6 +16,7 @@ public interface AnnouncementConverter {
     @Mapping(source = "dto.personName", target = "person.name")
     @Mapping(source = "dto.category", target = "subCategory.category.name")
     @Mapping(source = "dto.subCategoryId", target = "subCategory.id")
+    @Mapping(source = "dto.images", target = "images")
     Announcement getEntity(AnnouncementDTO dto);
 
     @Mapping(source = "announcement.id", target = "id")
@@ -24,5 +25,6 @@ public interface AnnouncementConverter {
     @Mapping(source = "announcement.person.name", target = "personName")
     @Mapping(source = "announcement.subCategory.category.name", target = "category")
     @Mapping(source = "announcement.subCategory.id", target = "subCategoryId")
+    @Mapping(source = "announcement.images", target = "images")
     AnnouncementDTO getDto(Announcement announcement);
 }

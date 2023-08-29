@@ -12,4 +12,5 @@ public class AnnouncementDTO {
     private String personName;
     private String category;
     private Long subCategoryId;
+    private byte[] images;
 }
