@@ -32,7 +32,7 @@ public class SecurityConfiguration {
             .authorizeHttpRequests()
             .requestMatchers("/person/**").hasAuthority("User")
             .requestMatchers("/announcement/by-email/").hasAuthority("User")
-            .requestMatchers("/announcement/save").hasAuthority("User")
+            .requestMatchers("/announcement/save**").hasAuthority("User")
             .requestMatchers("/announcement/save/**").hasAuthority("User")
             .requestMatchers(
                     "/auth/**",

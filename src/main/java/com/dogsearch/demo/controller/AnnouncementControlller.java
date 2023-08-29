@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
@@ -31,10 +32,10 @@ public class AnnouncementControlller { // TODO: Trocar para somente dois L
         }
     }
 
-    @PostMapping("/save")
-    public ResponseEntity save(@RequestBody AnnouncementSaveDTO announcementBody) {
+    @PostMapping(value = "/save", consumes = "multipart/form-data")
+    public ResponseEntity save(@ModelAttribute AnnouncementSaveDTO announcementBody) {
         try {
-            Announcement announcement = announcementService.createAnnouncementFromSaveDTO(announcementBody, UtilParam.DEFAULT_LONG_PARAM_TO_REPO);
+            Announcement announcement = announcementService.createAnnouncementFromSaveDTO(announcementBody, UtilParam.DEFAULT_LONG_PARAM_TO_REPO, announcementBody.getImages());
             UtilParam.checkIfAllParamsAreFilled(announcementService.getParams(announcement), Announcement.objectNamePtBr);
             URI location = URI.create(ServletUriComponentsBuilder.fromCurrentContextPath().path("/announcement/save").toUriString());
             return ResponseEntity.created(location).body(announcementService.save(announcement));
@@ -44,9 +45,9 @@ public class AnnouncementControlller { // TODO: Trocar para somente dois L
     }
 
     @PutMapping("/save/{id}")
-    public ResponseEntity update(@RequestBody AnnouncementSaveDTO announcementBody, @PathVariable("id") Long id) {
+    public ResponseEntity update(@RequestBody AnnouncementSaveDTO announcementBody, @PathVariable("id") Long id, @RequestParam(name="multipart_file")MultipartFile file) {
         try {
-            Announcement announcement = announcementService.createAnnouncementFromSaveDTO(announcementBody, id);
+            Announcement announcement = announcementService.createAnnouncementFromSaveDTO(announcementBody, id, file);
             UtilParam.checkIfAllParamsAreFilled(announcementService.getParams(announcement), Announcement.objectNamePtBr);
             URI location = URI.create(ServletUriComponentsBuilder.fromCurrentContextPath().path("/announcement/save/".concat(String.valueOf(id))).toUriString());
             return ResponseEntity.created(location).body(announcementService.save(announcement));

@@ -3,6 +3,7 @@ package com.dogsearch.demo.dto.announcement;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -12,5 +13,5 @@ public class AnnouncementSaveDTO {
     private String text;
     private Long personId;
     private Long subCategoryId;
-    private List<String> images;
+    private MultipartFile images;
 }

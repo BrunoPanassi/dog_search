@@ -24,9 +24,11 @@ public class Announcement {
     private SubCategory subCategory;
     @NonNull
     private String text;
-    private List<String> images; //TODO: Change to Blob and test
+    @Lob
+    @Column(name = "images", columnDefinition = "LONGBLOB")
+    private byte[] images;
 
-    public Announcement(Long id, Person person, String title, SubCategory subCategory, String text, List<String> images) {
+    public Announcement(Long id, Person person, String title, SubCategory subCategory, String text, byte[] images) {
         this.id = id;
         this.person = person;
         this.title = title;

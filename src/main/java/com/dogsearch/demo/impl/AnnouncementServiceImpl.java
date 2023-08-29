@@ -10,6 +10,7 @@ import com.dogsearch.demo.model.Person;
 import com.dogsearch.demo.model.SubCategory;
 import com.dogsearch.demo.repository.AnnouncementRepo;
 import com.dogsearch.demo.service.AnnouncementService;
+import com.dogsearch.demo.util.ImageUtil;
 import com.dogsearch.demo.util.exception.UtilException;
 import com.dogsearch.demo.util.param.UtilParam;
 import lombok.AllArgsConstructor;
@@ -17,6 +18,7 @@ import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -111,7 +113,7 @@ public class AnnouncementServiceImpl implements AnnouncementService {
         return announcementFounded;
     }
 
-    public Announcement createAnnouncementFromSaveDTO(AnnouncementSaveDTO dto, Long id) throws Exception {
+    public Announcement createAnnouncementFromSaveDTO(AnnouncementSaveDTO dto, Long id, MultipartFile file) throws Exception {
         Person person = personService.verifyIfExists(dto.getPersonId());
         SubCategory subCategory = subCategoryService.verifyIfExists(dto.getSubCategoryId());
         if (id == UtilParam.DEFAULT_LONG_PARAM_TO_REPO)
@@ -122,7 +124,7 @@ public class AnnouncementServiceImpl implements AnnouncementService {
                 dto.getTitle(),
                 subCategory,
                 dto.getText(),
-                dto.getImages()
+                ImageUtil.compressImage(file.getBytes())
         );
     }
 
