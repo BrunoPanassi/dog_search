@@ -44,10 +44,10 @@ public class AnnouncementControlller { // TODO: Trocar para somente dois L
         }
     }
 
-    @PutMapping("/save/{id}")
-    public ResponseEntity update(@RequestBody AnnouncementSaveDTO announcementBody, @PathVariable("id") Long id, @RequestParam(name="multipart_file")MultipartFile file) {
+    @PutMapping(value="/save/{id}", consumes = "multipart/form-data")
+    public ResponseEntity update(@ModelAttribute AnnouncementSaveDTO announcementBody, @PathVariable("id") Long id) {
         try {
-            Announcement announcement = announcementService.createAnnouncementFromSaveDTO(announcementBody, id, file);
+            Announcement announcement = announcementService.createAnnouncementFromSaveDTO(announcementBody, id, announcementBody.getImages());
             UtilParam.checkIfAllParamsAreFilled(announcementService.getParams(announcement), Announcement.objectNamePtBr);
             URI location = URI.create(ServletUriComponentsBuilder.fromCurrentContextPath().path("/announcement/save/".concat(String.valueOf(id))).toUriString());
             return ResponseEntity.created(location).body(announcementService.save(announcement));
