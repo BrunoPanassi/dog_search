@@ -24,16 +24,15 @@ public class Announcement {
     private SubCategory subCategory;
     @NonNull
     private String text;
-    @Lob
-    @Column(name = "images", columnDefinition = "LONGBLOB")
-    private byte[] images;
 
-    public Announcement(Long id, Person person, String title, SubCategory subCategory, String text, byte[] images) {
+    @OneToOne(mappedBy = "announcement")
+    private Image image;
+
+    public Announcement(Long id, Person person, String title, SubCategory subCategory, String text) {
         this.id = id;
         this.person = person;
         this.title = title;
         this.subCategory = subCategory;
         this.text = text;
-        this.images = images;
     }
 }

@@ -2,18 +2,11 @@ package com.dogsearch.demo.impl;
 
 import com.dogsearch.demo.dto.announcement.AnnouncementDTO;
 import com.dogsearch.demo.dto.announcement.AnnouncementSaveDTO;
-import com.dogsearch.demo.dto.announcement.AnnouncementTitlePersonDTO;
-import com.dogsearch.demo.mapper.announcement.AnnouncementConverter;
-import com.dogsearch.demo.model.Announcement;
-import com.dogsearch.demo.model.Category;
-import com.dogsearch.demo.model.Person;
-import com.dogsearch.demo.model.SubCategory;
+import com.dogsearch.demo.model.*;
 import com.dogsearch.demo.repository.AnnouncementRepo;
 import com.dogsearch.demo.service.AnnouncementService;
-import com.dogsearch.demo.util.ImageUtil;
 import com.dogsearch.demo.util.exception.UtilException;
 import com.dogsearch.demo.util.param.UtilParam;
-import lombok.AllArgsConstructor;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +16,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Stream;
 
 @Service @RequiredArgsConstructor
 public class AnnouncementServiceImpl implements AnnouncementService {
@@ -33,6 +27,8 @@ public class AnnouncementServiceImpl implements AnnouncementService {
     private PersonServiceImpl personService;
     @NonNull
     private SubCategoryServiceImpl subCategoryService;
+    @Autowired
+    private ImageServiceImpl imageService;
     public static final String[] announcementException = {Announcement.objectNamePtBr};
 
     @Override
@@ -113,24 +109,46 @@ public class AnnouncementServiceImpl implements AnnouncementService {
         return announcementFounded;
     }
 
-    public Announcement createAnnouncementFromSaveDTO(AnnouncementSaveDTO dto, Long id, MultipartFile file) throws Exception {
+    public Announcement createAnnouncementFromSaveDTO(AnnouncementSaveDTO dto, Long id, MultipartFile[] file) throws Exception {
         Person person = personService.verifyIfExists(dto.getPersonId());
         SubCategory subCategory = subCategoryService.verifyIfExists(dto.getSubCategoryId());
+
+        Stream<byte[]> imagesCompressed = Image.multipartFileArrayToStreamByteArray(file);
+        Image image = new Image(imagesCompressed);
+
+        Long imageId = null;
         if (id == UtilParam.DEFAULT_LONG_PARAM_TO_REPO)
             id = null;
-        return new Announcement(
+        else {
+            imageId = imageService.findImageIdByAnnouncementId(id);
+        }
+
+        image.setId(imageId);
+        Announcement announcement = new Announcement(
                 id,
                 person,
                 dto.getTitle(),
                 subCategory,
-                dto.getText(),
-                ImageUtil.compressImage(file.getBytes())
+                dto.getText()
         );
+        announcement.setImage(image);
+        image.setAnnouncement(announcement);
+
+        imageService.save(image);
+        return announcement;
     }
 
     public Object getByUser(String email) throws Exception {
         List<AnnouncementDTO> announcements = announcementRepo.find(email, UtilParam.DEFAULT_STRING_PARAM_TO_REPO);
-        announcements.forEach(announcementDTO -> announcementDTO.setImages(ImageUtil.decompressImage(announcementDTO.getImages())));
+        announcements.forEach(announcementDTO -> {
+            try {
+                Image image = imageService.find(announcementDTO.getId(), UtilParam.DEFAULT_LONG_PARAM_TO_REPO);
+                List<byte[]> images = image.getAListOfImages();
+                announcementDTO.setImages(images);
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+        });
         if (announcements == null)
             UtilException.throwWithMessageBuilder(UtilException.PARAM_NOT_FOUND, announcementException);
         return announcements;

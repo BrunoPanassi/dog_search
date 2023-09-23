@@ -13,5 +13,5 @@ public class AnnouncementSaveDTO {
     private String text;
     private Long personId;
     private Long subCategoryId;
-    private MultipartFile images;
+    private MultipartFile[] images;
 }

@@ -21,8 +21,7 @@ public interface AnnouncementRepo extends JpaRepository<Announcement, Long> {
             a.text,
             p.name,
             sc.category.name,
-            sc.id,
-            a.images) 
+            sc.id)
             FROM Announcement a
             JOIN a.person p
             JOIN a.subCategory sc
