@@ -51,7 +51,9 @@ public class AnnouncementServiceImpl implements AnnouncementService {
         Optional<Announcement> announcementFounded = announcementRepo.findById(id);
         if (!announcementFounded.isPresent())
             UtilException.throwWithMessageBuilder(UtilException.DONT_EXISTS_WITH_PARAM, announcementException);
+        imageService.deleteByAnnouncement(id);
         announcementRepo.deleteById(id);
+
         return announcementFounded.get();
     }
 
