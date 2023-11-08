@@ -7,6 +7,7 @@ import com.dogsearch.demo.repository.AnnouncementRepo;
 import com.dogsearch.demo.service.AnnouncementService;
 import com.dogsearch.demo.util.exception.UtilException;
 import com.dogsearch.demo.util.param.UtilParam;
+import lombok.AllArgsConstructor;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -61,8 +62,20 @@ public class AnnouncementServiceImpl implements AnnouncementService {
         return announcementRepo.getCities();
     }
 
-    public List<AnnouncementDTO> getByCityAndSubCategory(String city, String subCategory) {
-        return announcementRepo.getByCityAndSubCategory(city, subCategory);
+    public List<AnnouncementDTO> getByCityAndSubCategory(String city, String subCategory) throws Exception {
+        List<AnnouncementDTO> announcements = announcementRepo.getByCityAndSubCategory(city, subCategory);
+        announcements.forEach(announcementDTO -> {
+            try {
+                Image image = imageService.find(announcementDTO.getId(), UtilParam.DEFAULT_LONG_PARAM_TO_REPO);
+                List<byte[]> images = image.getAListOfImages();
+                announcementDTO.setImages(images);
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+        });
+        if (announcements == null)
+            UtilException.throwWithMessageBuilder(UtilException.PARAM_NOT_FOUND, announcementException);
+        return announcements;
     }
 
     public void verifyIfDoensHaveAndIdButAlreadyExistsInDatabase(Announcement announcement) throws Exception {

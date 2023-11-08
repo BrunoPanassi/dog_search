@@ -20,6 +20,8 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -74,7 +76,8 @@ public class AuthenticationService {
         }
 
         var person = personRepo.findPersonByEmail(request.getEmail()).orElseThrow();
-        var jwtToken = jwtService.generateToken(person);
+        Map<String, Object> extraClaims = generateExtraClaims(person);
+        var jwtToken = jwtService.generateToken(extraClaims, person);
         return AuthenticationResponse.builder()
                 .token(jwtToken)
                 .statusCode(HttpStatus.OK)
@@ -82,5 +85,11 @@ public class AuthenticationService {
                 .name(person.getName())
                 .email(person.getEmail())
                 .build();
+    }
+
+    private static Map<String, Object> generateExtraClaims(Person person) {
+        List<Role> roles = person.getRoles().stream().collect(Collectors.toList());
+        Map<String, Object> rolesMap = roles.stream().collect(Collectors.toMap(role -> "role_".concat(role.getId().toString()), Role::getDescription));
+        return rolesMap;
     }
 }

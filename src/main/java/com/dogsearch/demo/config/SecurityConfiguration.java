@@ -34,7 +34,7 @@ public class SecurityConfiguration {
             .requestMatchers("/announcement/by-email/").hasAuthority("User")
             .requestMatchers("/announcement/save**").hasAuthority("User")
             .requestMatchers("/announcement/save/**").hasAuthority("User")
-            .requestMatchers("/announcement/**").hasAuthority("User")
+            .requestMatchers("/category/save").hasAuthority("Admin")
             .requestMatchers(
                     "/auth/**",
                     "/category",

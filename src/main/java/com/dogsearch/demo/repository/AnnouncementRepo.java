@@ -20,6 +20,7 @@ public interface AnnouncementRepo extends JpaRepository<Announcement, Long> {
             a.title,
             a.text,
             p.name,
+            p.phoneNumber,
             sc.category.name,
             sc.id)
             FROM Announcement a
@@ -36,7 +37,8 @@ public interface AnnouncementRepo extends JpaRepository<Announcement, Long> {
             a.id,
             a.title,
             a.text,
-            p.name) 
+            p.name,
+            p.phoneNumber) 
             FROM Announcement a
             INNER JOIN person p ON p.id = a.person.id
             WHERE ((:personId = 0) OR (a.person.id = :personId)) 
@@ -59,12 +61,15 @@ public interface AnnouncementRepo extends JpaRepository<Announcement, Long> {
             a.id,
             a.title,
             a.text,
-            p.name) 
+            p.name,
+            p.phoneNumber,
+            s.category.name,
+            s.id)
             FROM Announcement a
             JOIN a.person p
             JOIN a.subCategory s
-            WHERE p.city = :city
-            AND s.name = :subCategory
+            WHERE UPPER(p.city) = UPPER(:city)
+            AND UPPER(s.name) = UPPER(:subCategory)
             """)
     List<AnnouncementDTO> getByCityAndSubCategory(@Param("city") String city, @Param("subCategory") String subCategory);
 }
