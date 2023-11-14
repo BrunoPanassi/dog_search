@@ -53,10 +53,14 @@ public class AuthenticationService {
                     .build();
         }
 
-        var jwtToken = jwtService.generateToken(person);
+        Map<String, Object> extraClaims = generateExtraClaims(person);
+        var jwtToken = jwtService.generateToken(extraClaims, person);
         return AuthenticationResponse.builder()
                 .token(jwtToken)
                 .statusCode(HttpStatus.OK)
+                .personId(person.getId())
+                .name(person.getName())
+                .email(person.getEmail())
                 .build();
     }
 
