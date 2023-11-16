@@ -32,9 +32,13 @@ public class SecurityConfiguration {
             .authorizeHttpRequests()
             .requestMatchers("/person/**").hasAuthority("User")
             .requestMatchers("/announcement/by-email/").hasAuthority("User")
-            .requestMatchers("/announcement/save**").hasAuthority("User")
             .requestMatchers("/announcement/save/**").hasAuthority("User")
             .requestMatchers("/category/save").hasAuthority("Admin")
+            .requestMatchers("/category/update").hasAuthority("Admin")
+            .requestMatchers("/category/delete").hasAuthority("Admin")
+            .requestMatchers("/sub-category/save").hasAuthority("Admin")
+            .requestMatchers("/sub-category/update").hasAuthority("Admin")
+            .requestMatchers("/sub-category/delete").hasAuthority("Admin")
             .requestMatchers(
                     "/auth/**",
                     "/category",
