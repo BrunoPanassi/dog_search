@@ -3,6 +3,7 @@ package com.dogsearch.demo.impl;
 import com.dogsearch.demo.dto.announcement.AnnouncementDTO;
 import com.dogsearch.demo.dto.announcement.AnnouncementSaveDTO;
 import com.dogsearch.demo.model.*;
+import com.dogsearch.demo.repository.AnnouncementFindRepo;
 import com.dogsearch.demo.repository.AnnouncementRepo;
 import com.dogsearch.demo.service.AnnouncementService;
 import com.dogsearch.demo.util.exception.UtilException;
@@ -11,6 +12,9 @@ import lombok.AllArgsConstructor;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -24,6 +28,8 @@ public class AnnouncementServiceImpl implements AnnouncementService {
 
     @Autowired
     private AnnouncementRepo announcementRepo;
+    @Autowired
+    private AnnouncementFindRepo announcementFindRepo;
     @NonNull
     private PersonServiceImpl personService;
     @NonNull
@@ -153,8 +159,8 @@ public class AnnouncementServiceImpl implements AnnouncementService {
         return announcement;
     }
 
-    public Object getByUser(String email) throws Exception {
-        List<AnnouncementDTO> announcements = announcementRepo.find(email, UtilParam.DEFAULT_STRING_PARAM_TO_REPO);
+    public Object getByUser(String email, Pageable pageable) throws Exception {
+        Page<AnnouncementDTO> announcements = announcementFindRepo.find(email, UtilParam.DEFAULT_STRING_PARAM_TO_REPO, pageable);
         announcements.forEach(announcementDTO -> {
             try {
                 Image image = imageService.find(announcementDTO.getId(), UtilParam.DEFAULT_LONG_PARAM_TO_REPO);

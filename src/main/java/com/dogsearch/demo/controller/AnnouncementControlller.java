@@ -7,6 +7,8 @@ import com.dogsearch.demo.model.Announcement;
 import com.dogsearch.demo.util.param.UtilParam;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -84,9 +86,9 @@ public class AnnouncementControlller { // TODO: Trocar para somente dois L
     }
 
     @GetMapping("/by-email/{email}")
-    public ResponseEntity getByUser(@PathVariable("email") String email) {
+    public ResponseEntity getByUser(@PathVariable("email") String email, @PageableDefault(page = 0, size = 10) Pageable pageable) {
         try {
-            return ResponseEntity.ok().body(announcementService.getByUser(email));
+            return ResponseEntity.ok().body(announcementService.getByUser(email, pageable));
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.toString());
         }
