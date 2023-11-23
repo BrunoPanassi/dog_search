@@ -38,4 +38,31 @@ public interface AnnouncementFindRepo extends PagingAndSortingRepository<Announc
                     AND ((:title = '_default_') OR UPPER(a.title) like CONCAT('%', UPPER(:title), '%'))
                     """)
     Page<AnnouncementDTO> find(@Param("personEmail") String personEmail, @Param("title") String title, Pageable pageable);
+
+    @Query(value = """
+            SELECT
+            new com.dogsearch.demo.dto.announcement.AnnouncementDTO(
+            a.id,
+            a.title,
+            a.text,
+            p.name,
+            p.phoneNumber,
+            s.category.name,
+            s.id)
+            FROM Announcement a
+            JOIN a.person p
+            JOIN a.subCategory s
+            WHERE UPPER(p.city) = UPPER(:city)
+            AND UPPER(s.name) = UPPER(:subCategory)
+            """,
+            countQuery = """
+                    SELECT
+                    COUNT(*)
+                    FROM Announcement a
+                    JOIN a.person p
+                    JOIN a.subCategory s
+                    WHERE UPPER(p.city) = UPPER(:city)
+                    AND UPPER(s.name) = UPPER(:subCategory)
+                    """)
+    Page<AnnouncementDTO> getByCityAndSubCategory(@Param("city") String city, @Param("subCategory") String subCategory, Pageable pageable);
 }

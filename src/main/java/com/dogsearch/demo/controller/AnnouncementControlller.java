@@ -77,9 +77,9 @@ public class AnnouncementControlller { // TODO: Trocar para somente dois L
     }
 
     @PostMapping("/city-and-sub-category")
-    public ResponseEntity getByCityAndSubCategory(@RequestBody AnnouncementCitySubCategoryDTO dto) {
+    public ResponseEntity getByCityAndSubCategory(@RequestBody AnnouncementCitySubCategoryDTO dto, @PageableDefault(page = 0, size = 8) Pageable pageable) {
         try {
-            return ResponseEntity.ok().body(announcementService.getByCityAndSubCategory(dto.getCity(), dto.getSubCategory()));
+            return ResponseEntity.ok().body(announcementService.getByCityAndSubCategory(dto.getCity(), dto.getSubCategory(), pageable));
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.toString());
         }

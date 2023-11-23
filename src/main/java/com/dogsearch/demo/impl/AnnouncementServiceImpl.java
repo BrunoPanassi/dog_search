@@ -68,8 +68,8 @@ public class AnnouncementServiceImpl implements AnnouncementService {
         return announcementRepo.getCities();
     }
 
-    public List<AnnouncementDTO> getByCityAndSubCategory(String city, String subCategory) throws Exception {
-        List<AnnouncementDTO> announcements = announcementRepo.getByCityAndSubCategory(city, subCategory);
+    public Page<AnnouncementDTO> getByCityAndSubCategory(String city, String subCategory, Pageable pageable) throws Exception {
+        Page<AnnouncementDTO> announcements = announcementFindRepo.getByCityAndSubCategory(city, subCategory, pageable);
         announcements.forEach(announcementDTO -> {
             try {
                 Image image = imageService.find(announcementDTO.getId(), UtilParam.DEFAULT_LONG_PARAM_TO_REPO);
